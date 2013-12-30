@@ -1,5 +1,17 @@
 # Flatline user manual
 
+## S-expressions vs. JSON
+
+Flatline expressions in this manual use its lisp-like syntax, based on
+[symbolic expressions](http://en.wikipedia.org/wiki/S-expression) or
+*sexps*.  When sending them to BigML via our API, you can also use
+their JSON representation, which is trivially obtained by using JSON
+lists for each paranthesised sexp.  For instance:
+
+```
+    (if (< (f "a") 3) 0 4) => ["if", ["<", "\"a"", 3], 0, 4]
+```
+
 ## Literal values
 
 Constant numbers, symbols, booleans and strings, using Java/Clojure
@@ -25,6 +37,7 @@ Input field values are accessed using the `field` operator:
 ```
      (field <field-designator> [<shift>])
      <field-designator> := field id | field name | column_number
+     <shift> := integer expression
 ```
 
 where `<field-designator>` can be either the identifier, name or
