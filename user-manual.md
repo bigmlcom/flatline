@@ -1,4 +1,4 @@
-# Flatline, a language for data rows generation and filtering
+# Flatline user manual
 
 ## Literal values
 

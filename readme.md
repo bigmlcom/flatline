@@ -1,4 +1,4 @@
-# Flatline, a language for data rows generation and filtering
+# Flatline, a language for data generation and filtering
 
 Flatline is a lispy language for the specification of values to be
 extracted or generated from an input dataset, using a finite sliding
@@ -25,9 +25,6 @@ dataset).
 
 
 ## License
-
-All documentation in this repository is licensed under the following Creative
-Commons 4.0 license:
 
 <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">Flatline reference documentation</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="https://bigml.com" property="cc:attributionName" rel="cc:attributionURL">BigML Inc</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
 
