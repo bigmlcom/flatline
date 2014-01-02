@@ -46,7 +46,7 @@ Substrings:
 Regexps:
 
 ```
-    (matches <string> <regex-string>)  => boolean
+    (matches? <string> <regex-string>)  => boolean
     (re-quote <string>)  => regexp that matches <string> literally
     (replace <string> <regexp> <replacement>) => string
     (replace-first <string> <regexp> <replacement>) => string
@@ -104,6 +104,14 @@ Mathematical functions:
     (to-radians <x>) ;; <x> := degrees
 ```
 
+## Coercions
+
+```
+    (integer <sexp>) => integer
+    (real <sexp>) => real
+    ;; (integer true) = 1, (integer false) = 0
+```
+
 ## Dates and time
 
 Functions taking a number representing the *epoch*, i.e., the number
@@ -118,6 +126,12 @@ of **milliseconds** since Jan 1st 1970.
     (epoch-second <n>) => number
     (epoch-millisecond <n>) => number
     (epoch-fields <n>) => list of numbers
+```
+
+Any string can be coerced to an epoch:
+
+```
+    (epoch <string> [<format>])
 ```
 
 ## Conditionals and local variables

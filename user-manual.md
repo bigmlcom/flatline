@@ -216,12 +216,12 @@ and ending at end (defaults to length of string), exclusive.
 
 ### Regular expression matching
 
-The `matches` function takes a regular expression as a string and a
+The `matches?` function takes a regular expression as a string and a
 form evaluating to a string and returns a boolean telling you if the
 latter matches the former.
 
 ```
-    (matches <string> <regex-string>)  => boolean
+    (matches? <string> <regex-string>)  => boolean
     <regex-string> := a string form representing a regular expression
     <string> := a string expression to be tested against the regexp
 ```
@@ -235,8 +235,8 @@ For instance, to check if the field "name" contains the word "Hal"
 anywhere, you could use:
 
 ```
-     (matches (field "name") ".*\\sHal\\s.*")
-     (matches (field "name") "(?i).*\\shal\\s.*")
+     (matches? (field "name") ".*\\sHal\\s.*")
+     (matches? (field "name") "(?i).*\\shal\\s.*")
 ```
 
 where the second form performs case-insensitive pattern matching.
@@ -254,14 +254,14 @@ field, use `re-quote`:
 and then you can write things like:
 
 ```
-      (if (matches (f "result") (re-quote (f "target"))) "GOOD" "MISS")
+      (if (matches? (f "result") (re-quote (f "target"))) "GOOD" "MISS")
 ```
 
 and you can use the string concatenation operator `str` to construct
 regular expressions strings out of smaller pieces:
 
 ```
-      (matches (f "name") (str "^" (re-quote (f "salutation")) "\\s *$"))
+      (matches? (f "name") (str "^" (re-quote (f "salutation")) "\\s *$"))
 ```
 
 ### Regular expression search and replace
@@ -357,6 +357,21 @@ number of arguments (or zero, for `+` and `*`) are available.  Of
 course their operands must evaluate to a numeric value; otherwise, the
 result will be nil, representing a missing value.
 
+## Numerical coercions
+
+You can coerce arbitrary values to explicit numeric types.  When the
+input sexp is a string (or a category name), we try to parse it as a
+number and afterwards perform a pure numerical coercion if needed.
+Boolean values are mapped to 0 (false) and 1 (true).
+
+```
+   (integer <sexp>)
+   (real <sexp>)
+```
+
+If the input value cannot be coerced to a number the result is a
+missing value.
+
 ## Mathematical functions
 
 We provide a host of mathematical functions:
@@ -439,6 +454,28 @@ For instance:
 The epoch functions also accept negative integers, which represent
 dates prior to 1970.
 
+### Datetime parsing
+
+Conversely, string values representing dates can be transformed to a
+numerical epoch by using the `epoch` coercion function:
+
+```
+    (epoch <str>)
+    (epoch <str> <format>)
+```
+
+If you don't specify a datetime format for parsing, we try a long list
+of available formats in sequence, which is less efficient than if you
+provide the format explicitly.  Datetime format specifiers follow the
+well known
+[*JodaTime* specification for datetime patterns](http://www.joda.org/joda-time/key_format.html).
+
+For instance:
+
+```
+    (epoch-fields (epoch "1969-14-07T06:00:12")) => [1969 14 07 06 00 12 0]
+    (epoch-hour (epoch "11~22~30" "hh~mm~ss")) => 11
+```
 
 ## Local bindings
 
