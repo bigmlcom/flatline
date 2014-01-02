@@ -216,12 +216,12 @@ and ending at end (defaults to length of string), exclusive.
 
 ### Regular expression matching
 
-The `matches` function takes a regular expression as a string and a
+The `matches?` function takes a regular expression as a string and a
 form evaluating to a string and returns a boolean telling you if the
 latter matches the former.
 
 ```
-    (matches <string> <regex-string>)  => boolean
+    (matches? <string> <regex-string>)  => boolean
     <regex-string> := a string form representing a regular expression
     <string> := a string expression to be tested against the regexp
 ```
@@ -235,8 +235,8 @@ For instance, to check if the field "name" contains the word "Hal"
 anywhere, you could use:
 
 ```
-     (matches (field "name") ".*\\sHal\\s.*")
-     (matches (field "name") "(?i).*\\shal\\s.*")
+     (matches? (field "name") ".*\\sHal\\s.*")
+     (matches? (field "name") "(?i).*\\shal\\s.*")
 ```
 
 where the second form performs case-insensitive pattern matching.
@@ -254,14 +254,14 @@ field, use `re-quote`:
 and then you can write things like:
 
 ```
-      (if (matches (f "result") (re-quote (f "target"))) "GOOD" "MISS")
+      (if (matches? (f "result") (re-quote (f "target"))) "GOOD" "MISS")
 ```
 
 and you can use the string concatenation operator `str` to construct
 regular expressions strings out of smaller pieces:
 
 ```
-      (matches (f "name") (str "^" (re-quote (f "salutation")) "\\s *$"))
+      (matches? (f "name") (str "^" (re-quote (f "salutation")) "\\s *$"))
 ```
 
 ### Regular expression search and replace
@@ -357,6 +357,21 @@ number of arguments (or zero, for `+` and `*`) are available.  Of
 course their operands must evaluate to a numeric value; otherwise, the
 result will be nil, representing a missing value.
 
+## Numerical coercions
+
+You can coerce arbitrary values to explicit numeric types.  When the
+input sexp is a string (or a category name), we try to parse it as a
+number and afterwards perform a pure numerical coercion if needed.
+Boolean values are mapped to 0 (false) and 1 (true).
+
+```
+   (integer <sexp>)
+   (real <sexp>)
+```
+
+If the input value cannot be coerced to a number the result is a
+missing value.
+
 ## Mathematical functions
 
 We provide a host of mathematical functions:
@@ -439,6 +454,96 @@ For instance:
 The epoch functions also accept negative integers, which represent
 dates prior to 1970.
 
+### Datetime parsing
+
+Conversely, string values representing dates can be transformed to a
+numerical epoch by using the `epoch` coercion function:
+
+```
+    (epoch <str>)
+    (epoch <str> <format>)
+```
+
+If you don't specify a datetime format for parsing, we try a long list
+of available formats in sequence, which is less efficient than if you
+provide the format explicitly.  Datetime format specifiers follow the
+well known
+[*JodaTime* specification for datetime patterns](http://www.joda.org/joda-time/key_format.html).
+
+For instance:
+
+```
+    (epoch-fields (epoch "1969-14-07T06:00:12")) => [1969 14 07 06 00 12 0]
+    (epoch-hour (epoch "11~22~30" "hh~mm~ss")) => 11
+```
+
+The datetime formate pattern letters are:
+
+```
+    Symbol  Meaning                      Presentation  Examples
+    ------  -------                      ------------  -------
+     G       era                          text          AD
+     C       century of era (>=0)         number        20
+     Y       year of era (>=0)            year          1996
+
+     x       weekyear                     year          1996
+     w       week of weekyear             number        27
+     e       day of week                  number        2
+     E       day of week                  text          Tuesday; Tue
+
+     y       year                         year          1996
+     D       day of year                  number        189
+     M       month of year                month         July; Jul; 07
+     d       day of month                 number        10
+
+     a       halfday of day               text          PM
+     K       hour of halfday (0~11)       number        0
+     h       clockhour of halfday (1~12)  number        12
+
+     H       hour of day (0~23)           number        0
+     k       clockhour of day (1~24)      number        24
+     m       minute of hour               number        30
+     s       second of minute             number        55
+     S       fraction of second           number        978
+
+     z       time zone                    text          Pacific Standard Time; PST
+     Z       time zone offset/id          zone          -0800; -08:00; America/Los_Angeles
+
+     '       escape for text              delimiter
+     ''      single quote                 literal       '
+```
+
+The count of pattern letters determine the format, according to the
+following rules:
+
+  - Text: If the number of pattern letters is 4 or more, the full form
+    is used; otherwise a short or abbreviated form is used if
+    available. Thus, "EEEE" might output "Monday" whereas "E" might
+    output "Mon" (the short form of Monday).
+
+  - Number: The minimum number of digits. Shorter numbers are
+    zero-padded to this amount. Thus, "HH" might output "09" whereas
+    "H" might output "9" (for the hour-of-day of 9 in the morning).
+
+  - Year: Numeric presentation for year and weekyear fields are
+    handled specially. For example, if the count of `y` is 2, the year
+    will be displayed as the zero-based year of the century, which is
+    two digits.
+
+  - Month: 3 or over, use text, otherwise use number. Thus, "MM" might
+    output "03" whereas "MMM" might output "Mar" (the short form of
+    March) and "MMMM" might output "March".
+
+  - Zone: `Z` outputs offset without a colon, `ZZ` outputs the offset
+    with a colon, `ZZZ` or more outputs the zone id.
+
+  - Zone names: Time zone names (`z`) cannot be parsed.
+
+Any characters in the pattern that are not in the ranges of
+`['a'..'z']` and `['A'..'Z']` will be treated as quoted text. For
+instance, characters like `:`, `.`, ` `, `#` and `?` will appear in
+the resulting time text even they are not embraced within single
+quotes.
 
 ## Local bindings
 
