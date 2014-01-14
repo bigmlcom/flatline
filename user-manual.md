@@ -99,6 +99,64 @@ E.g.:
 will all yield boolean values.  For backwards compatibility, `missing`
 is an alias for `missing?`.
 
+### Normalized field values
+
+For numeric fields, it's often useful to normalize their values to a
+standard interval (usually [0, 1]).  To that end, you can use the
+Flatline primitive `normalize`, which takes as arguments the
+designator for the field you want to normalize and, optionally, the
+two bounds of the resulting interval:
+
+```
+     (normalize <id> [<from> <to>])
+     => (+ from (* (- to from)
+                   (/ (- (f id) (minimum id))
+                      (- (maximum id) (minimum id)))))
+```
+
+For instance:
+
+```
+     (normalize "000001") ;; = (normalize "000001" 0 1)
+     (normalize "width" -1 1)
+     (normalize "length" 8 23)
+```
+
+As shown in the formula above, `normalize` linearly maps the minimum
+value of the field to `from` (0 by default) and the maximum value to
+`to` (1 by default).
+
+Besides this linear normalization, it's also common to standardize
+numeric data values by mapping them to a gaussian, according to the
+equation:
+
+```
+     x[i] -> (x[i] - mean(x)) / variance(x)
+```
+
+or, in flatline terms:
+
+```
+    (/ (- (f <id>) (mean <id>)) (variance <id>))
+```
+
+This normalization function is called the Z score, and we provide it
+as the function `z-score`:
+
+```
+    (z-score <field-designator>)
+```
+
+E.g.:
+
+```
+    (z-score "000034")
+    (z-score "a numeric field")
+    (z-score 23)
+```
+
+As with `normalize`, the field used must have a numeric optype.
+
 ### Field properties
 
 Field descriptors contain lots of properties with metadata about the
@@ -424,6 +482,8 @@ language very near to you.
 
 ## Dates and times
 
+### Epoch fields
+
 A numerical field can be interpreted as an *epoch*, that is, the
 number of **milliseconds** since 1970.  Flatline provides the
 following functions to expand an epoch to its date-time components:
@@ -432,6 +492,7 @@ following functions to expand an epoch to its date-time components:
     (epoch-year <n>)
     (epoch-month <n>)
     (epoch-day <n>)
+    (epoch-weekday <n>)
     (epoch-hour <n>)
     (epoch-minute <n>)
     (epoch-second <n>)
@@ -439,7 +500,7 @@ following functions to expand an epoch to its date-time components:
 
     (epoch-fields <n>)
       => (list (epoch-year <n>) (epoch-month <n>) (epoch-day <n>)
-               (epoch-hour <n>) (epoch-minute <n>)
+               (epoch-weekday <n>) (epoch-hour <n>) (epoch-minute <n>)
                (epoch-second <n>) (epoch-millisecond <n>))
     <n> ::= numerical value
 ```
@@ -453,6 +514,25 @@ For instance:
 
 The epoch functions also accept negative integers, which represent
 dates prior to 1970.
+
+The day of the week (given by `epoch-weekday`) is a number from 1
+(Monday) to 7 (Sunday).
+
+### Datetime arithmetic
+
+Since epochs are just integers, date arithmetic can be performed at
+that level by simply using Flatline's arithmetic operations.
+
+As a convenience, if a field of type `datetime` is used in an
+arithmetic operation, it's automatically converted to an epoch (i.e.,
+an integer value) for you.  For instance, the two following
+expressions for computing the number of seconds since 1970 are
+equivalent:
+
+```
+     (/ (f "a-datetime-string") 1000)
+     (/ (epoch (f "a-datetime-string")) 1000)
+```
 
 ### Datetime parsing
 

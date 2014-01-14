@@ -29,6 +29,13 @@ Field properties:
     (within-percentiles? <field-designator> <lower> <upper>) => boolean
 ```
 
+Normalization:
+
+```
+     (normalize <id> [<from> <to>]) ;; [from to] defaults to [0, 1]
+     (z-score <id>)
+```
+
 ## Strings and regular expressions
 
 Conversion of any value to a string:
@@ -121,6 +128,7 @@ of **milliseconds** since Jan 1st 1970.
     (epoch-year <n>) => number
     (epoch-month <n>) => number
     (epoch-day <n>) => number
+    (epoch-weekday <n>) => number
     (epoch-hour <n>) => number
     (epoch-minute <n>) => number
     (epoch-second <n>) => number
