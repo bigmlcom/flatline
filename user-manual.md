@@ -99,6 +99,64 @@ E.g.:
 will all yield boolean values.  For backwards compatibility, `missing`
 is an alias for `missing?`.
 
+### Normalized field values
+
+For numeric fields, it's often useful to normalize their values to a
+standard interval (usually [0, 1]).  To that end, you can use the
+Flatline primitive `normalize`, which takes as arguments the
+designator for the field you want to normalize and, optionally, the
+two bounds of the resulting interval:
+
+```
+     (normalize <id> [<from> <to>])
+     => (+ from (* (- to from)
+                   (/ (- (f id) (minimum id))
+                      (- (maximum id) (minimum id)))))
+```
+
+For instance:
+
+```
+     (normalize "000001") ;; = (normalize "000001" 0 1)
+     (normalize "width" -1 1)
+     (normalize "length" 8 23)
+```
+
+As shown in the formula above, `normalize` linearly maps the minimum
+value of the field to `from` (0 by default) and the maximum value to
+`to` (1 by default).
+
+Besides this linear normalization, it's also common to standardize
+numeric data values by mapping them to a gaussian, according to the
+equation:
+
+```
+     x[i] -> (x[i] - mean(x)) / variance(x)
+```
+
+or, in flatline terms:
+
+```
+    (/ (- (f <id>) (mean <id>)) (variance <id>))
+```
+
+This normalization function is called the Z score, and we provide it
+as the function `z-score`:
+
+```
+    (z-score <field-designator>)
+```
+
+E.g.:
+
+```
+    (z-score "000034")
+    (z-score "a numeric field")
+    (z-score 23)
+```
+
+As with `normalize`, the field used must have a numeric optype.
+
 ### Field properties
 
 Field descriptors contain lots of properties with metadata about the

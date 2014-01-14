@@ -29,6 +29,13 @@ Field properties:
     (within-percentiles? <field-designator> <lower> <upper>) => boolean
 ```
 
+Normalization:
+
+```
+     (normalize <id> [<from> <to>]) ;; [from to] defaults to [0, 1]
+     (z-score <id>)
+```
+
 ## Strings and regular expressions
 
 Conversion of any value to a string:
