@@ -482,6 +482,8 @@ language very near to you.
 
 ## Dates and times
 
+### Epoch fields
+
 A numerical field can be interpreted as an *epoch*, that is, the
 number of **milliseconds** since 1970.  Flatline provides the
 following functions to expand an epoch to its date-time components:
@@ -490,6 +492,7 @@ following functions to expand an epoch to its date-time components:
     (epoch-year <n>)
     (epoch-month <n>)
     (epoch-day <n>)
+    (epoch-weekday <n>)
     (epoch-hour <n>)
     (epoch-minute <n>)
     (epoch-second <n>)
@@ -497,7 +500,7 @@ following functions to expand an epoch to its date-time components:
 
     (epoch-fields <n>)
       => (list (epoch-year <n>) (epoch-month <n>) (epoch-day <n>)
-               (epoch-hour <n>) (epoch-minute <n>)
+               (epoch-weekday <n>) (epoch-hour <n>) (epoch-minute <n>)
                (epoch-second <n>) (epoch-millisecond <n>))
     <n> ::= numerical value
 ```
@@ -511,6 +514,25 @@ For instance:
 
 The epoch functions also accept negative integers, which represent
 dates prior to 1970.
+
+The day of the week (given by `epoch-weekday`) is a number from 1
+(Monday) to 7 (Sunday).
+
+### Datetime arithmetic
+
+Since epochs are just integers, date arithmetic can be performed at
+that level by simply using Flatline's arithmetic operations.
+
+As a convenience, if a field of type `datetime` is used in an
+arithmetic operation, it's automatically converted to an epoch (i.e.,
+an integer value) for you.  For instance, the two following
+expressions for computing the number of seconds since 1970 are
+equivalent:
+
+```
+     (/ (f "a-datetime-string") 1000)
+     (/ (epoch (f "a-datetime-string")) 1000)
+```
 
 ### Datetime parsing
 

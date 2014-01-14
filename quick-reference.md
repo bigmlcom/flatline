@@ -128,6 +128,7 @@ of **milliseconds** since Jan 1st 1970.
     (epoch-year <n>) => number
     (epoch-month <n>) => number
     (epoch-day <n>) => number
+    (epoch-weekday <n>) => number
     (epoch-hour <n>) => number
     (epoch-minute <n>) => number
     (epoch-second <n>) => number
