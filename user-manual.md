@@ -131,13 +131,13 @@ numeric data values by mapping them to a gaussian, according to the
 equation:
 
 ```
-     x[i] -> (x[i] - mean(x)) / variance(x)
+     x[i] -> (x[i] - mean(x)) / standard_deviation(x)
 ```
 
 or, in flatline terms:
 
 ```
-    (/ (- (f <id>) (mean <id>)) (variance <id>))
+    (/ (- (f <id>) (mean <id>)) (standard-deviation <id>))
 ```
 
 This normalization function is called the Z score, and we provide it
@@ -189,10 +189,11 @@ you typing:
     (mean <field-designator>)
     (median <field-designator>)
     (minimum <field-designator>)
-    (missing_count <field-designator>)
+    (missing-count <field-designator>)
     (population <field-designator>)
     (sum <field-designator>)
-    (sum_squares <field-designator>)
+    (sum-squares <field-designator>)
+    (standard-deviation <field-designator>)
     (variance <field-designator>)
 
     (preferred? <field-designator>)
