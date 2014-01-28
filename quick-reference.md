@@ -21,13 +21,14 @@ Field properties:
     (missing? <field-designator> [<shift>]) => boolean
     (missing-count <field-designator>) => number
     (percentile <field-designator> <fraction>) => number
-    (population <field-designator> [<sexp>]) => number
+    (population-fraction <field-designator> <fraction>) => integer
+    (within-percentiles? <field-designator> <lower> <upper>) => boolean
     (preferred? <field-designator>) => boolean
+    (population <field-designator>) => integer
     (sum <field-designator>) => number
     (sum-squares <field-designator>) => number
     (variance <field-designator>) => number
     (standard-deviation <field-designator>) => number
-    (within-percentiles? <field-designator> <lower> <upper>) => boolean
 ```
 
 Normalization:

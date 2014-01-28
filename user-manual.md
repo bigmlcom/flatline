@@ -203,7 +203,7 @@ you typing:
     (bin-count <field-designator> <bin-number>)
     (percentile <field-designator> <fraction>)    ;; fraction in [0.0, 1.0]
     (within-percentiles? <field-designator> <lower> <upper>)
-    (population <field-designator> <sexp>)
+    (population-fraction <field-designator> <sexp>)
 ```
 
 As you can see, the category and count accessors take an additional
@@ -224,7 +224,7 @@ could use, for instance, the following predicate in a filter to remove
 outliers:
 
 ```
-     (< (percentile "age" 0.5) (f "age") (percentile "age" 0.95))
+     (<= (percentile "age" 0.5) (f "age") (percentile "age" 0.95))
 ```
 
 We provide syntactic sugar for the above expression via
@@ -234,10 +234,10 @@ We provide syntactic sugar for the above expression via
      (within-percentiles? "age" 0.5 0.95)
 ```
 
-Related to percentile is `population`, which, given a field identifier
-and a value, computes the number of instances of this field whose
-value is less than the given one.  As with the case of `percentile`,
-the designated field must be numeric.
+Related to percentile is `population-fraction`, which, given a field
+identifier and a value, computes the number of instances of this field
+whose value is less than the given one.  As with the case of
+`percentile`, the designated field must be numeric.
 
 The examples above also show that the parameters you pass to these
 forms need not be constants: they can be read from the input row.
