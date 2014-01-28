@@ -9,7 +9,7 @@ their JSON representation, which is trivially obtained by using JSON
 lists for each paranthesised sexp.  For instance:
 
 ```
-    (if (< (f "a") 3) 0 4) => ["if", ["<", "a", 3], 0, 4]
+    (if (< (f "a") 3) 0 4) => ["if", ["<", ["f", "a"], 3], 0, 4]
 ```
 
 ## Literal values
