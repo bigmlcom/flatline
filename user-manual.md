@@ -127,7 +127,7 @@ These two functions work for numeric, categorical and text fields,
 with generated values satisfying:
 
   - For numeric fields, generated values are in the interval
-    `[(minimum <fid>),  (maximum <fid>)]
+    `[(minimum <fid>),  (maximum <fid>)]`
   - For categorical fields, generated values belong to the set
     `(categories <fid>)`
   - For text fields, we generate terms in the field's tag cloud
