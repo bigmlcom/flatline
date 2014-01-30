@@ -24,9 +24,6 @@ Field properties:
     (minimum <field-designator>) => number
     (missing? <field-designator> [<shift>]) => boolean
     (missing-count <field-designator>) => number
-    (percentile <field-designator> <fraction>) => number
-    (population-fraction <field-designator> <fraction>) => integer
-    (within-percentiles? <field-designator> <lower> <upper>) => boolean
     (preferred? <field-designator>) => boolean
     (population <field-designator>) => integer
     (sum <field-designator>) => number
@@ -40,6 +37,15 @@ Normalization:
 ```
      (normalize <id> [<from> <to>]) ;; [from to] defaults to [0, 1]
      (z-score <id>)
+```
+
+Percentiles and population:
+
+```
+    (percentile <field-designator> <fraction>) => number
+    (population-fraction <field-designator> <fraction>) => integer
+    (within-percentiles? <field-designator> <lower> <upper>) => boolean
+    (quantile-label <field-designator> <label-0> ... <label-n>)
 ```
 
 ## Strings and regular expressions
