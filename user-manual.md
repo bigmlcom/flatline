@@ -99,6 +99,75 @@ E.g.:
 will all yield boolean values.  For backwards compatibility, `missing`
 is an alias for `missing?`.
 
+### Randomized field values
+
+There are two Flatline functions that will let you generate a random
+value in the domain of a given field, given its designator:
+
+```
+     (random-value <field-designator>)
+     (weighted-random-value <field-designator>)
+```
+
+e.g.
+
+```
+     (random-value "age")
+     (weighted-random-value "000001")
+     (weighted-random-value 3)
+```
+
+Both functions generate a value with the constrain that it belongs to
+the domain of the given field, but while `random-value` uses a uniform
+probability of the field's range of values, `weighted-random-value`
+uses de distribution of the field values (as computed in its
+histogram) as the probability measure for the random generator.
+
+These two functions work for numeric, categorical and text fields,
+with generated values satisfying:
+
+  - For numeric fields, generated values are in the interval
+    `[(minimum <fid>),  (maximum <fid>)]`
+  - For categorical fields, generated values belong to the set
+    `(categories <fid>)`
+  - For text fields, we generate terms in the field's tag cloud
+    (generated values correspond to single terms in the cloud).
+  - Datetime **parent** fields are not supported, since they don't
+    have a defined distribution: you can use any of their numeric
+    children for generating values following their distributions.
+
+A common use of these functions is replacing missing values with
+random data, which in Flatline you could write as, say:
+
+```
+    (if (missing? "00000") (random-value "000000") (f "000000"))
+```
+
+We provide a shortcut for those common operations with the functions
+`ensure-value` and `ensure-weighted-value`:
+
+```
+   (ensure-value <fdes>) :=
+     (if (missing? <fdes>) (random-value <fdes>) (field <fdes>))
+
+   (ensure-weighted-value <fdes>) :=
+     (if (missing? <fdes>) (weighted-random-value <fdes>) (field <fdes>))
+```
+
+We them, our example above can be simply written as:
+
+```
+   (ensure-value "000000")
+```
+
+or, if you want that the generated random values follow the same
+distribution as the field "000000":
+
+```
+   (ensure-weighted-value "000000")
+```
+
+
 ### Normalized field values
 
 For numeric fields, it's often useful to normalize their values to a
@@ -159,6 +228,8 @@ As with `normalize`, the field used must have a numeric optype.
 
 ### Field properties
 
+#### Summary properties
+
 Field descriptors contain lots of properties with metadata about the
 field, including its summary.  These propeties (when they're atomic)
 can be accessed via `field-prop`:
@@ -201,9 +272,6 @@ you typing:
     (category-count <field-designator> <category>)
     (bin-center <field-designator> <bin-number>)
     (bin-count <field-designator> <bin-number>)
-    (percentile <field-designator> <fraction>)    ;; fraction in [0.0, 1.0]
-    (within-percentiles? <field-designator> <lower> <upper>)
-    (population-fraction <field-designator> <sexp>)
 ```
 
 As you can see, the category and count accessors take an additional
@@ -218,10 +286,23 @@ and the bin (a 0-based integer index) you refer to:
      (bin-center (field "field-selector") 4)
 ```
 
-Perhaps more interesting is `percentile`, which gives you the value a
-field must have to be in the given population fraction.  Thus, you
-could use, for instance, the following predicate in a filter to remove
-outliers:
+#### Field population, percentiles &co for numeric fields
+
+Besides direct readings from the field summaries, there exist other
+derived statistical properties available as Flatline functions.  In
+particular, these are the ones related to population percentiles and
+their distribution for *numeric* fields:
+
+```
+    (percentile <field-designator> <fraction>)    ;; fraction in [0.0, 1.0]
+    (within-percentiles? <field-designator> <lower> <upper>)
+    (population-fraction <field-designator> <sexp>)
+    (quantile-label <field-designator> <label-0> ... <label-n>)
+```
+
+The first one, `percentile`, which you the value a numeric field must
+have to be in the given population fraction.  Thus, you could use, for
+instance, the following predicate in a filter to remove outliers:
 
 ```
      (<= (percentile "age" 0.5) (f "age") (percentile "age" 0.95))
@@ -239,8 +320,30 @@ identifier and a value, computes the number of instances of this field
 whose value is less than the given one.  As with the case of
 `percentile`, the designated field must be numeric.
 
-The examples above also show that the parameters you pass to these
-forms need not be constants: they can be read from the input row.
+Finally, `quantile-label` computes the quantile the input value
+belongs to and generates the label you provided.  For instance, this
+generator:
+
+```
+    (quantile-label "000023" "1st" "2nd" "3rd" "4th")
+```
+
+will generate the label "1st" if the value of the field 000023 is in
+belongs to the first population quartile (since we're providing 4
+labels, we use 4 segments), "2nd" to the second, etc.  The sexp above
+is equivalent to:
+
+```
+    (cond (within-percentiles? "000023" 0 0.25) "1st"
+          (within-percentiles? "000023" 0.25 0.5) "2nd"
+          (within-percentiles? "000023" 0.5 0.75) "3rd"
+          "4th")
+```
+
+and, as you see, it easily generalizes to any number of labels: if you
+had provided 5 labels we'd be computing quintiles; had them been 10,
+the labels would correspond to deciles, and so forth.  As with all
+functions in this section, the target field must be numeric.
 
 ## Strings and regular expressions
 
