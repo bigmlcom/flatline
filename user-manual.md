@@ -99,6 +99,75 @@ E.g.:
 will all yield boolean values.  For backwards compatibility, `missing`
 is an alias for `missing?`.
 
+### Randomized field values
+
+There are two Flatline functions that will let you generate a random
+value in the domain of a given field, given its designator:
+
+```
+     (random-value <field-designator>)
+     (weighted-random-value <field-designator>)
+```
+
+e.g.
+
+```
+     (random-value "age")
+     (weighted-random-value "000001")
+     (weighted-random-value 3)
+```
+
+Both functions generate a value with the constrain that it belongs to
+the domain of the given field, but while `random-value` uses a uniform
+probability of the field's range of values, `weighted-random-value`
+uses de distribution of the field values (as computed in its
+histogram) as the probability measure for the random generator.
+
+These two functions work for numeric, categorical and text fields,
+with generated values satisfying:
+
+  - For numeric fields, generated values are in the interval
+    `[(minimum <fid>),  (maximum <fid>)]
+  - For categorical fields, generated values belong to the set
+    `(categories <fid>)`
+  - For text fields, we generate terms in the field's tag cloud
+    (generated values correspond to single terms in the cloud).
+  - Datetime **parent** fields are not supported, since they don't
+    have a defined distribution: you can use any of their numeric
+    children for generating values following their distributions.
+
+A common use of these functions is replacing missing values with
+random data, which in Flatline you could write as, say:
+
+```
+    (if (missing? "00000") (random-value "000000") (f "000000"))
+```
+
+We provide a shortcut for those common operations with the functions
+`ensure-value` and `ensure-weighted-value`:
+
+```
+   (ensure-value <fdes>) :=
+     (if (missing? <fdes>) (random-value <fdes>) (field <fdes>))
+
+   (ensure-weighted-value <fdes>) :=
+     (if (missing? <fdes>) (weighted-random-value <fdes>) (field <fdes>))
+```
+
+We them, our example above can be simply written as:
+
+```
+   (ensure-value "000000")
+```
+
+or, if you want that the generated random values follow the same
+distribution as the field "000000":
+
+```
+   (ensure-weighted-value "000000")
+```
+
+
 ### Normalized field values
 
 For numeric fields, it's often useful to normalize their values to a

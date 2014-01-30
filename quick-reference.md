@@ -6,6 +6,10 @@ Access to input field values:
      (field <field-designator> [<shift>])
      (f <field-designator> [<shift>])
      (fields <field-designator> ... <field-designator-n>)
+     (random-field-value <field-designator>)
+     (weighted-random-field-value <field-designator>)
+     (ensure-value <field-designator>)
+     (ensure-weighted-value <field-designator>)
 ```
 
 Field properties:
