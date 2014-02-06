@@ -376,6 +376,23 @@ It is also possible to take a substring of a string value using the
 It returns the substring of `<string>` beginning at start inclusive,
 and ending at end (defaults to length of string), exclusive.
 
+### String utilities
+
+The primitive `levenshtein` computes, as an integer, the distance
+between two given string values:
+
+```
+    (levenshtein <str-sexp0> <str-sexp1>)
+```
+
+Arbitrary arguments are allowed, provided they're strings:
+
+```
+    (levenshtein (f 0) "a random string")
+    (if (< (levenshtein (f 0) "bluething") 5) "bluething" (f 0))
+```
+
+
 ### Regular expression matching
 
 The `matches?` function takes a regular expression as a string and a

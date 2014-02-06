@@ -71,6 +71,12 @@ Regexps:
     (replace-first <string> <regexp> <replacement>) => string
 ```
 
+Utilities:
+
+```
+    (levenshtein <str-sexp0> <str-sexp1>)
+```
+
 ## Math
 
 Arithmetic operators:
