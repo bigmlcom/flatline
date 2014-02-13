@@ -814,10 +814,32 @@ missing token.
            "mediocre"))
 ```
 
-Although Flatline won't complain if you give `<then>` and `<else>`
-different types, in the context of data generation that will be almost
-always the case, because a field (generated or not) can have only one
-datatype.
+Flatline won't let you give `<then>` and `<else>` different types.
+
+Another caveat is that in Flatline boolean expressions can have 3
+values, namely `true`, `false` and **missing**.  If the `<cond>` in
+an `if` expression is a missing value, **the whole expression will
+evaluate to a missing value**.  That means that, for instance:
+
+```
+    (if (< (f 0) 3) 0 1)
+```
+
+will evaluate to null (and *not* to 1) when the field 0 has a missing
+value.  That's because the `<else>` branch is not even evaluated.
+Therefore:
+
+```
+    (if (< (f 0) 3) 0 (if (missing? 0) 2 1))
+```
+
+will again evaluate to null when the field 0 is missing: it will *not*
+evaluate to 2, because the `<else>` branch is never reached.  If you
+need to test for a missing value, the test must always come first:
+
+```
+    (if (missing? 0) 2 (if (< (f 0) 3) 0 1))
+```
 
 We also provide the `cond` operator, which allows a more compact
 representation of a chain of nested `if` clauses:
@@ -850,6 +872,23 @@ For instance:
           (and (<= 2 (f "age") 10) (= "M" (f "sex"))) "boy"
           (< 10 (f "age") 20) "teenager"
           "adult")
+```
+
+The same caveat with `if` regarding missing values applies to `cond`:
+**if any of the conditions evaluates to a missing value, the whole
+expression evaluates to a missing value**.  Therefore, checks using
+`missing?` must always come first:
+
+```
+    ;;; CORRECT
+    (cond (missing? "age") 0
+          (< (f "age") 10) 1
+          2)
+
+    ;;; INCORRECT (the missing? test is never reached)
+    (cond (< (f "age")) 1
+          (missing? "age") 0
+          2)
 ```
 
 ## Lists
