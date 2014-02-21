@@ -116,7 +116,7 @@ Mathematical functions:
     (min <x0> ... <xn>)
     (mod <n> <m>) ;; Modulus
     (pow <x> <n>)
-    (rand)            ;; a random double in [0, 1]
+    (rand)            ;; a random double in [0, 1)
     (rand-int <n>)    ;; a random integer in [0, n) or (n, 0]
     (round <x>)
     (sin <x>)     ;; <x> := radians
