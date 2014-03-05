@@ -74,7 +74,8 @@ Regexps:
 Utilities:
 
 ```
-    (levenshtein <str-sexp0> <str-sexp1>)
+    (levenshtein <str-sexp0> <str-sexp1>)  => number
+    (occurrences <string> <term> [<case-insensitive?> <lang>]) => number
 ```
 
 ## Math

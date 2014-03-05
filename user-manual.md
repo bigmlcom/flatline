@@ -392,6 +392,33 @@ Arbitrary arguments are allowed, provided they're strings:
     (if (< (levenshtein (f 0) "bluething") 5) "bluething" (f 0))
 ```
 
+You can also compute the number of times a word appears in a given
+string by means of the `occurrences` function.  It takes an input
+string and the term to look for as mandatory parameters, and,
+optionally, a language code, and a boolean controlling case
+sensitivity:
+
+```
+    (occurrences <string> <term> [<case-insensitive?> <lang>])
+    <case-insensitive?> := true | false (defaults to false)
+    <lang> := one of ["en", "es", "ca", "nl", "none"] (defaults to "none")
+```
+
+By default, terms matching is case sensitive and exact.  The optional
+third argument is a boolean flag to turn on case insensitivity.
+Finally, if you provide a fourth constant argument specifying one of
+the known languages (English, Spanish, Catalan or Dutch), words are
+compared using their stems (e.g., in English, "day" and "days" will be
+considered the same term).
+
+For instance:
+
+```
+    (occurrences "howdy woman, howdy" "howdy") => 2
+    (occurrences "howdy woman" "Man" true) => 0
+    (occurrences "howdy man" "Man" true) => 1
+    (occurrences "hola, Holas" "hola" true "es") => 2
+```
 
 ### Regular expression matching
 
