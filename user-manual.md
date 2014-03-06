@@ -286,6 +286,77 @@ and the bin (a 0-based integer index) you refer to:
      (bin-center (field "field-selector") 4)
 ```
 
+#### Discretization of numeric fields
+
+A simple way to discretize a numeric field is to assign a label to
+each of a finite set of segments, defined by a sequence of upper
+bounds.  For instance:
+
+```
+    (let (v (f "age"))
+      (cond (< v 2) "baby"
+            (< v 10) "child"
+            (< v 20) "teenager"
+            "adult")
+```
+
+Flatline provides a shortcut for the above expression via its
+`segment-label` primitive:
+
+```
+   (segment-label "000000" "baby" 2 "child" 10 "teenager" 20 "adult")
+```
+
+As you can see, the first argument is the field designator (as usual,
+a name, column number or identifier), followed by alternating labels
+and upper bounds.  More generally:
+
+```
+    (segment-label <fdes> <l1> <b1> ... <ln-1> <bn-1> <ln>)
+    <l1> ... <ln> strings, <b1> ... <bn-1> numbers
+    => (cond (< (f <fdes>) <b1>) <l1>
+             (< (f <fdes>) <b2>) <l2>
+             ...
+             (< (f <fdes>) <bn-1>) <ln-1>
+             <ln>)
+```
+
+The alternating labels and bounds must be constant strings and
+numbers.  If you want to use segments of equal length between the
+minimum and maximum value of the field, you can omit the upper bounds
+and give simply the list of labels, e.g.
+
+```
+    (segment-label 0 "1st fourth" "2nd fourth" "3rd fourth" "4th fourth")
+```
+
+which would be equivalent to:
+
+```
+    (let (max (maximum 0)
+          min (minimum 0)
+          step (/ (- max min) 4))
+      (segment-label 0 "1st fourth" (+ min step)
+                       "2nd fourth" (+ min step step)
+                       "3rd fourth" (+ min step step step)
+                       "4th fourth"))
+```
+
+or, in general:
+
+```
+     (segment-label <fdes> <l1> ... <ln>) with  <l1> ... <ln> strings
+
+     => (let (min (minimum <fdes>)
+              step (- (maximum <fdes>) min)
+              shift (- (f <fdes>) min))
+          (cond (< shift step) <l1>
+                (< shift (* 2 step)) <l2>
+                ...
+                (< shift (* (- n 1) step)) <ln-1>
+                <ln>))
+```
+
 #### Field population, percentiles &co for numeric fields
 
 Besides direct readings from the field summaries, there exist other

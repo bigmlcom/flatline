@@ -48,6 +48,17 @@ Percentiles and population:
     (quantile-label <field-designator> <label-0> ... <label-n>)
 ```
 
+Segments:
+
+```
+    (segment-label <field-designator>
+                   <label-1> <bound-1>
+                   ...
+                   <label-n-1> <bound-n-1>
+                   <label-n>)
+    (segment-label <field-designator> <label-1> <label-2> ... <label-n>)
+```
+
 ## Strings and regular expressions
 
 Conversion of any value to a string:
