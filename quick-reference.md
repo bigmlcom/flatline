@@ -45,7 +45,7 @@ Percentiles and population:
     (percentile <field-designator> <fraction>) => number
     (population-fraction <field-designator> <fraction>) => integer
     (within-percentiles? <field-designator> <lower> <upper>) => boolean
-    (quantile-label <field-designator> <label-0> ... <label-n>)
+    (percentile-label <field-designator> <label-0> ... <label-n>)
 ```
 
 Segments:

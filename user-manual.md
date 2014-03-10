@@ -368,7 +368,7 @@ their distribution for *numeric* fields:
     (percentile <field-designator> <fraction>)    ;; fraction in [0.0, 1.0]
     (within-percentiles? <field-designator> <lower> <upper>)
     (population-fraction <field-designator> <sexp>)
-    (quantile-label <field-designator> <label-0> ... <label-n>)
+    (percentile-label <field-designator> <label-0> ... <label-n>)
 ```
 
 The first one, `percentile`, which you the value a numeric field must
@@ -391,18 +391,18 @@ identifier and a value, computes the number of instances of this field
 whose value is less than the given one.  As with the case of
 `percentile`, the designated field must be numeric.
 
-Finally, `quantile-label` computes the quantile the input value
+Finally, `percentile-label` computes the percentile the input value
 belongs to and generates the label you provided.  For instance, this
 generator:
 
 ```
-    (quantile-label "000023" "1st" "2nd" "3rd" "4th")
+    (percentile-label "000023" "1st" "2nd" "3rd" "4th")
 ```
 
 will generate the label "1st" if the value of the field 000023 is in
-belongs to the first population quartile (since we're providing 4
-labels, we use 4 segments), "2nd" to the second, etc.  The sexp above
-is equivalent to:
+the first population "quartile" (since we're providing 4 labels, we use
+4 segments), "2nd" to the second, etc.  The sexp above is equivalent
+to:
 
 ```
     (cond (within-percentiles? "000023" 0 0.25) "1st"
@@ -412,9 +412,17 @@ is equivalent to:
 ```
 
 and, as you see, it easily generalizes to any number of labels: if you
-had provided 5 labels we'd be computing quintiles; had them been 10,
-the labels would correspond to deciles, and so forth.  As with all
+had provided 5 labels we'd be computing "quintiles"; had them been 10,
+the labels would correspond to "deciles," and so forth.  As with all
 functions in this section, the target field must be numeric.
+
+Note that we're using scare quotes around quartile, quintiles,
+etc. above.  That's because `percentile-label` will assign to each
+value the label of the lowest percentile it belongs to, and therefore,
+it won't really discretize your variable by exact quantiles: if the
+population is skewed around a value, so it'll be the resulting labels'
+population.
+
 
 ## Strings and regular expressions
 
