@@ -1069,6 +1069,21 @@ elements of a numeric list:
    (/ (list x y ...)) := (/ x y ...)
 ```
 
+Finally, you can check whether a value appears in a list using the
+`in` operator:
+
+```
+   (in <x> (<x0> <x1> ... <xn>))
+```
+
+which evaluates to `true` if any of the `<xi>` equals `<x>`, e.g.:
+
+```
+   (in 3 (1 2 3 2)) => true
+   (in "abc" (1 2 3)) => false
+   (in (f "size") ("X" "XXL"))
+```
+
 ## Maps and filters
 
 It's also possible to apply an expression template (a Flatline

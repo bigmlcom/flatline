@@ -222,6 +222,12 @@ Creation and elememt access:
     (nth <list> <n>) =>  0-based nth element
 ```
 
+Inclusion:
+
+```
+    (in <value> <list>) => boolean
+```
+
 Properties of lists:
 
 ```
