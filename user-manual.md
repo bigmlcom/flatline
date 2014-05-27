@@ -576,7 +576,7 @@ For example:
 
 ```
      (replace "Almost Pig Latin" "\\b(\\w)(\\w+)\\b" "$2$1ay")
-      -> "lmostAay igPay atinLay"
+      => "lmostAay igPay atinLay"
 ```
 
 While `replace` replaces all occurrences of the regular expression,
@@ -585,8 +585,30 @@ While `replace` replaces all occurrences of the regular expression,
 
 ```
      (replace-first "swap first two words" "(\\w+)(\\s+)(\\w+)" "$3$2$1")
-      -> "first swap two words"
+      => "first swap two words"
 ```
+
+### Text analysis
+
+Flatline provides a primitive function, `language`, that tries to
+detect the language of a given string value.  It returns the ISO 639
+code of the detected language, as a string.
+
+```
+    (language <string>) => <ISO 639 string code>
+```
+
+For instance:
+
+```
+    (language "this is an English phrase") => "en"
+```
+
+Note that language detectors will do in general a very poor job for
+short texts, and that we currently limit the set of detected languages
+to those used in BigML's text analysis facility (English, Spanish,
+Catalan or Dutch as of this writing, represented as "en", "es", "ca"
+and "nl", respectively.)
 
 ## Relational operators and equality
 
