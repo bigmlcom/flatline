@@ -1166,6 +1166,8 @@ needed, future versions of Flatline will provide slow real functions.
 
 ## Field lists and windows
 
+### (Almost) all fields
+
 We provide several primitives for creating lists of field values.  The
 first one is `all`, which specifies that all input fields should be
 copied, without any modification.  For cases where you want to copy
@@ -1193,6 +1195,29 @@ with either their identifier, name or `column_number`:
    (all-but "id" "000023")
    (fields "000003" 3 "a field" "another" "0002a3b-3")
 ```
+
+Sometimes one needs to fill-in missing values in one pass: an easy way
+for that is provided by the function `all-with-defaults`, that copies
+all input rows, but replacing missing values with given ones:
+
+```
+    (all-with-defaults <field-designator-0> <field-value-0>
+                       <field-designator-1> <field-value-1>
+                       ...
+                       <field-designator-n> <field-value-n>)
+```
+
+The list of designator/value pairs does not need to be exhaustive or
+ordered, and again the designator can be a field id, name, or column
+number:
+
+```
+    (all-with-defaults "species" "Iris-versicolor"
+                       "petal-width" 2.8
+                       "000002" 0)
+```
+
+### Windows
 
 In addition to horizontally selecting different fields in the same
 row, we can keep the field fixed and select vertical windows of its
