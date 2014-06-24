@@ -12,6 +12,18 @@ Access to input field values:
      (ensure-weighted-value <field-designator>)
 ```
 
+All fields in a row:
+
+```
+     (all)
+     (all-but <field-designator> ... <field-designator-n>)
+     (all-with-defaults <field-designator-0> <field-value-0>
+                        <field-designator-1> <field-value-1>
+                        ...
+                        <field-designator-n> <field-value-n>)
+     (all-with-numeric-default ["mean" "median" "minimum" "maximum" <number>]
+```
+
 Field properties:
 
 ```

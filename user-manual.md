@@ -480,7 +480,7 @@ sensitivity:
 ```
     (occurrences <string> <term> [<case-insensitive?> <lang>])
     <case-insensitive?> := true | false (defaults to false)
-    <lang> := one of ["en", "es", "ca", "nl", "none"] (defaults to "none")
+    <lang> := "en" | "es" | "ca" | "nl" | "none" (defaults to "none")
 ```
 
 By default, terms matching is case sensitive and exact.  The optional
