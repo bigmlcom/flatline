@@ -1217,6 +1217,30 @@ number:
                        "000002" 0)
 ```
 
+It is also possible to provide a default for all missing numeric
+fields in a row at once, using `all-with-numeric-default`:
+
+```
+    (all-with-numeric-default <value>)
+    <value> := "mean" | "median" | "minimum" | "maximum" | <number>
+```
+
+As shown, we can specify that missing numeric fields be filled with
+their mean, median, minimum or maximum values (as read from their
+respective field descriptors) or with any concrete numeric value.  For
+example:
+
+```
+    (all-with-numeric-default "median")
+    (all-with-numeric-default 0)
+```
+
+A word of caution: for the case of concrete values, the given number
+is cast to the datatype of the target field, i.e., it'll be mapped to
+value range of the given field (for instance, if you give a default
+value of 128 and a field of type `int8` is missing, it'll receive the
+value `-1`).
+
 ### Windows
 
 In addition to horizontally selecting different fields in the same
