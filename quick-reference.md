@@ -102,12 +102,12 @@ Utilities:
     (language <string>) => ["en", "es", "ca", "nl"]
 ```
 
-## Math
+## Math and logic
 
 Arithmetic operators:
 
 ```
-   + - * /
+   + - * / div mod
 ```
 
 Relational operators:
@@ -140,6 +140,7 @@ Mathematical functions:
     (max <x0> ... <xn>)
     (min <x0> ... <xn>)
     (mod <n> <m>) ;; Modulus
+    (div <n> <m>) ;; Integer division (quotient)
     (pow <x> <n>)
     (rand)            ;; a random double in [0, 1)
     (rand-int <n>)    ;; a random integer in [0, n) or (n, 0]

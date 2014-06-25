@@ -664,6 +664,11 @@ number of arguments (or zero, for `+` and `*`) are available.  Of
 course their operands must evaluate to a numeric value; otherwise, the
 result will be nil, representing a missing value.
 
+When not coerced, the result of the `/` operator has type `double`.
+If needed, you can transform it to an integer via the coercion
+function `integer` or use instead the integer division operator `div`
+(see below).
+
 ## Numerical coercions
 
 You can coerce arbitrary values to explicit numeric types.  When the
@@ -689,6 +694,7 @@ We provide a host of mathematical functions:
 
     (abs <x>)     ;; Absolute value
     (mod <n> <m>) ;; Modulus
+    (div <n> <m>) ;; Integer division (quotient)
     (sqrt <x>)
     (pow <x> <n>)
     (square <x>)  ;; (* <x> <x>)
