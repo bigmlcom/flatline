@@ -371,9 +371,10 @@ their distribution for *numeric* fields:
     (percentile-label <field-designator> <label-0> ... <label-n>)
 ```
 
-The first one, `percentile`, which you the value a numeric field must
-have to be in the given population fraction.  Thus, you could use, for
-instance, the following predicate in a filter to remove outliers:
+The first one, `percentile`, gives you the value that a numeric field
+must have in order to be in the given population fraction.  Thus, you
+could use, for instance, the following predicate in a filter to remove
+outliers:
 
 ```
      (<= (percentile "age" 0.5) (f "age") (percentile "age" 0.95))
