@@ -28,6 +28,21 @@ Examples:
    false
 ```
 
+## Counters
+
+While running over an input dataset, Flatline keeps track of the
+(zero-based) number of the input row that's being used, which can be
+accessed with the function `row-number`, which takes no arguments:
+
+```
+    (row-number) => current input row (0-based)
+```
+
+A typical use of this function is to generate a unique identifier for
+each row.  The row number will start at 0 unless you skip some rows of
+the input dataset, and increase by one on each new row (unless you're
+specifying a input row step when generating a dataset).
+
 ## Field accessors
 
 ### Field values

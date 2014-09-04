@@ -24,6 +24,12 @@ All fields in a row:
      (all-with-numeric-default ["mean" "median" "minimum" "maximum" <number>]
 ```
 
+Row properties:
+
+```
+    (row-number) => current row number, 0-based
+```
+
 Field properties:
 
 ```
