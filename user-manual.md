@@ -1276,7 +1276,7 @@ sugar over the shifted field accessors we've already seen:
     := (list (f <field-designator> <start>)
              (f <field-designator> <start + 1>)
              ...
-             (f <field-designator <end>))
+             (f <field-designator> <end>))
 ```
 
 So, for instance, the window:
@@ -1315,8 +1315,8 @@ value of the values in a window, their sum and the sequence of their
 differences:
 
 ```
-   (avg-window <field-designator <start> <end>)
-     := (/ (+ (window <field-designator <start> <end>)) (+ 1 (- <start> <end>))
+   (avg-window <field-designator> <start> <end>)
+     := (/ (+ (window <field-designator> <start> <end>)) (+ 1 (- <start> <end>))
 
 
    (sum-window <field-designator> <start> <end>)

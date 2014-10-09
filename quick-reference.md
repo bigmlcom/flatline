@@ -270,7 +270,7 @@ Field lists and windows:
 ```
     (fields <field-designator> ... <field-designator-n>)
     (window <field-designator> <start> <end>)
-    (avg-window <field-designator <start> <end>)  ;; average of values
+    (avg-window <field-designator> <start> <end>)  ;; average of values
     (sum-window <field-designator> <start> <end>) ;; sum of values
     (diff-window <fdes> <start> <end>) ;; differences of consecutive values
     (cond-window <fdes> <sexp>)        ;; values that satisfy boolean sexp
