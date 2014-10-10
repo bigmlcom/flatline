@@ -530,6 +530,34 @@ For instance:
     (occurrences "hola, Holas" "hola" true "es") => 2
 ```
 
+### Hashing functions
+
+There are several hashing functions available: `md5`, `sha1` and
+`sha256`.  These functions act on the stream of bytes of their input
+string and return a string representing the bytes that the
+cryptographic digest they name produces, in their hexadecimal
+representation:
+
+```
+     (md5 <string>) => string of length 32
+     (sha1 <string>) => string of length 40
+     (sha256 <string>) => string of length 64
+```
+
+e.g.
+
+```
+     (md5 "a text") => "b229386ec4627869d2c71b7df3c9600a"
+     (sha1 "a text") => "7081f2babbafff16b4bae16282859c844baa14ef"
+     (sha256 "") =>
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+```
+
+As shown, the returned strings use charaters in `[0-9a-f]` to
+represent the values of the output bytes: md5 produces 16 bytes (128
+bits), sha-1 produces 20 bytes (160 bits) and sha-256 produces 32
+bytes (256 bits).
+
 ### Regular expression matching
 
 The `matches?` function takes a regular expression as a string and a

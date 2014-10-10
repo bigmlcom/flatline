@@ -109,6 +109,14 @@ Utilities:
     (language <string>) => ["en", "es", "ca", "nl"]
 ```
 
+Hashing:
+
+```
+     (md5 <string>) => string of length 32
+     (sha1 <string>) => string of length 40
+     (sha256 <string>) => string of length 64
+```
+
 ## Math and logic
 
 Arithmetic operators:
