@@ -473,6 +473,21 @@ and ending at end (defaults to length of string), exclusive.
 
 ### String utilities
 
+The number of characters in a string value is given by `length`:
+
+```
+     (length <string>)
+```
+
+e.g.
+
+```
+     (length "abc") => 3
+     (length "") => 0
+```
+
+Note that the length of a missing value is a missing value, not zero.
+
 The primitive `levenshtein` computes, as an integer, the distance
 between two given string values:
 
