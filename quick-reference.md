@@ -168,6 +168,7 @@ Mathematical functions:
     (tanh <x>)
     (to-degrees <x>) ;; <x> := radians
     (to-radians <x>) ;; <x> := degrees
+    (linear-regression <x1> <y1> ... <xn> <yn>) ;; slope, intercept, pearson
 ```
 
 ## Coercions

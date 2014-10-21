@@ -794,6 +794,22 @@ Currently there's no way of specifying the seed used for random number
 generation, but it's coming shortly to a selected data generation
 language very near to you.
 
+It's also possible to compute the slope, intercept and Pearson
+coeffient of the linear regression of a set of points given as a list
+of alternating x and y coordinates:
+
+```
+     (linear-regression <x0> <y0> <x1> <y1> ... <xn> <yn>)
+        => (<slope> <intercept> <pearson>) ;; 3 double values
+```
+
+e.g.
+
+```
+     (linear-regression 1 1 2 2 3 3 4 4) => (1.0 0 1.0)
+     (linear-regression 2.0 3.1 2.3 3.3 24.3 45.2) => (1.89 -0.87 0.9999)
+```
+
 ## Dates and times
 
 ### Epoch fields
