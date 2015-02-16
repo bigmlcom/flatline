@@ -77,6 +77,12 @@ Segments:
     (segment-label <field-designator> <label-1> <label-2> ... <label-n>)
 ```
 
+Vectorize categorical and text fields:
+
+```
+     (vectorize <field-designator>)
+```
+
 ## Strings and regular expressions
 
 Conversion of any value to a string:
