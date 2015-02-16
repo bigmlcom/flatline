@@ -241,6 +241,26 @@ E.g.:
 
 As with `normalize`, the field used must have a numeric optype.
 
+### Vectorized categorical or text fields
+
+It may be useful to convert categorical or text fields to numeric values for
+models which accept only numeric data as input. This can be accomplished
+with the Flatline primitive `vectorize`:
+
+```
+    (vectorize <field-designator>)
+```
+
+For categorical fields, the output is a binary indicator vector. In
+other words, it is a list of numeric fields, one per possible categorical
+value, and for each instance, the numeric field corresponding to the category of 
+that instance will have a value of `1`, whereas the remaining numeric fields will have
+a value of `0`.
+
+For text fields, the output is a list of numeric fields, each corresponding to a term in
+the field's tag cloud. The value of each field is the number of times that term appears
+in that instance.
+
 ### Field properties
 
 #### Summary properties
