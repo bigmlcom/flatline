@@ -80,7 +80,7 @@ Segments:
 Vectorize categorical and text fields:
 
 ```
-     (vectorize <field-designator>)
+     (vectorize <field-designator> [<max-fields>])
 ```
 
 ## Strings and regular expressions

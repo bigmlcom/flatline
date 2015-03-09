@@ -248,7 +248,7 @@ models which accept only numeric data as input. This can be accomplished
 with the Flatline primitive `vectorize`:
 
 ```
-    (vectorize <field-designator>)
+    (vectorize <field-designator> [<max-fields>])
 ```
 
 For categorical fields, the output is a binary indicator vector. In
@@ -260,6 +260,9 @@ a value of `0`.
 For text fields, the output is a list of numeric fields, each corresponding to a term in
 the field's tag cloud. The value of each field is the number of times that term appears
 in that instance.
+
+A numeric expression or literal can be passed as an optional second argument to limit
+the number of generated fields to the *n* most frequent categories or text terms.
 
 ### Field properties
 
