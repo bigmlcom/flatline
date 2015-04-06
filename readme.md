@@ -23,6 +23,16 @@ dataset).
   - [Quick reference](quick-reference.md) with all pre-defined
     functions.
 
+## Local interpreters
+
+We include in [js](./js) Flatline interpreters implemented in
+Javascript (compiled by Clojurescript from our canonical server-side
+implementation) that you can use from your browser or from a nodejs
+session.
+
+The [python directory](./python) contains a small Python library that
+wraps the nodejs interpreter and let's you interact with it using
+Python.
 
 ## License
 
