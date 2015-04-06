@@ -55,6 +55,9 @@ class Interpreter:
             return {'fields': Interpreter.infer_fields(rows[0])}
         return dataset
 
+    def defined_functions(self):
+        return self.__eval_in_flatline('defined_primitives')
+
     def check_lisp(self, sexp, dataset={}):
         r = self.__eval_in_flatline('evaluate_sexp', sexp, dataset)
         r.pop(u'mapper', None)

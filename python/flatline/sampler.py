@@ -34,10 +34,11 @@ class Sampler:
             self._bigml = bigml
         self._sample = None
 
-    def take_sample(self, dataset_id):
+    def take_sample(self, dataset_id, size=10):
         sample = self._bigml.create_sample(dataset_id)
-        self._sample = self._bigml.check_resource(sample,
-                                                  query_string="limit=-1")
+        qs = "limit=-1&rows=%d" % size
+        self._sample = self._bigml.check_resource(sample['resource'],
+                                                  query_string=qs)
 
     def sample(self):
         if self._sample is None:
