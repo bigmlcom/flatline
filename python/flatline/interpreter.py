@@ -5,7 +5,7 @@
 
 
 """
-    flatline.interpreter
+flatline.interpreter
 
 User level interface to the flatline interpreter.
 
