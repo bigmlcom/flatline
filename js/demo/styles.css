@@ -1,0 +1,63 @@
+html {
+    font: 90%/1.3 arial,sans-serif;
+    padding:1em;
+    background:#B9C2CC;
+}
+
+form {
+    background:#fff;
+    padding:1em;
+    border:1px solid #eee;
+}
+
+fieldset div {
+    margin:0.3em 0.3em;
+    clear:both;
+}
+
+form {
+    margin:1em;
+    width:30em;
+}
+
+label {
+    float:none;
+    display:block;
+    clear:both;
+}
+
+legend {
+    color:#0b77b7;
+    font-size:1.4em;
+}
+
+legend span {
+    /* width:10em; */
+    text-align:right;
+}
+
+fieldset {
+    border:1px solid #ddd;
+    padding:0 0.5em 0.5em;
+}
+
+.help {
+    color: red;
+}
+
+.button {
+    margin:10px;
+    padding:5px;
+}
+
+textarea {
+    width:25em;
+}
+
+.error {
+    color:red;
+}
+
+.result {
+    color:darkgreen;
+}

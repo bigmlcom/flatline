@@ -1,0 +1,236 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Flatline calculator</title>
+    <link rel="stylesheet" href="styles.css"/>
+  </head>
+  <body>
+    <form>
+      <fieldset>
+        <legend>Dataset</legend>
+        <div>
+          <label for="datasetFile">Load from JSON file</label>
+          <input type="file" id="datasetFile" name="datasetFile"/>
+        </div>
+        <div id="datasetMsg">
+        </div>
+      </fieldset>
+    </form>
+    <form id="lispEvalForm" action="">
+      <fieldset>
+        <legend>Lisp</legend>
+        <div>
+          <label for="lispInput">Lisp s-expression</label>
+          <textarea id="lispInput"></textarea>
+        </div>
+        <div>
+          <button type="button" id="lispEvalButton"
+                  title="Using flatline.evaluate_sexp(...)">
+            evaluate
+          </button>
+          <button type="button" id="lisp2JSONButton"
+                  title="Using JSON.stringify(flatline.sexp_to_js(...))">
+            &rarr; JSON</button>
+        </div>
+        <div id="lispResult">
+        </div>
+        <div>
+          <label for="lispInputRow">Input rows (CSVs)</label>
+          <textarea id="lispInputRow" rows="4"></textarea>
+        </div>
+        <div>
+          <button type="button" id="lispApplyButton"
+                  title="Using flatline.apply_form(evaluated_form, rows)">
+            apply
+          </button>
+        </div>
+        <div id="lispApplyOutput">
+        </div>
+      </fieldset>
+    </form>
+    <form id="jsonEval" action"">
+      <fieldset>
+        <legend>JSON</legend>
+        <div>
+          <label for="jsonInput">JSON expression</label>
+          <textarea id="jsonInput"></textarea>
+        </div>
+        <div>
+          <button type="button" id="jsonEvalButton"
+                  title="Using flatline.evaluate_js(JSON.parse(...))">
+            evaluate
+          </button>
+          <button type="button" id="JSON2LispButton"
+                  title="Using flatline.js_to_sexp(JSON.parse(...)))">
+            &rarr; Lisp</button>
+        </div>
+        <div id="jsonResult">
+        </div>
+        <div>
+          <label for="jsonInputRow">Input rows (CSVs)</label>
+          <textarea id="jsonInputRow" rows="4"></textarea>
+        </div>
+        <div>
+          <button type="button" id="jsonApplyButton"
+                  title="Using flatline.apply_form(evaluated_form, rows)">
+            apply
+          </button>
+        </div>
+        <div id="jsonApplyOutput">
+        </div>
+      </fieldset>
+    </form>
+    <script src="./flatline.js"></script>
+    <script>
+      var dataset = null;
+      var evaluatedLisp = null;
+      var evaluatedJSON = null;
+
+      function handleDatasetChange(evt) {
+        var files = evt.target.files; // FileList object
+        for (var i = 0, f; f = files[i]; i++) {
+          var reader = new FileReader();
+          // Closure to capture the file information.
+          reader.onload = (function(theFile) {
+            return function(e) {
+            // console.log(e.target.result);
+            assignDataset(e.target.result);
+           };
+          })(f);
+         // Read in the file as a data URL.
+         reader.readAsText(f, "UTF-8");
+        }
+      }
+
+      function assignDataset(response) {
+        oldDataset = dataset;
+        try {
+          dataset = JSON.parse(response);
+          if (dataset.fields == undefined &&
+              (dataset.dataset == undefined ||
+               dataset.dataset.fields == undefined)) {
+            throw new Error('Dataset does not contain fields!');
+          }
+          clearMsg('datasetMsg');
+        } catch (err) {
+          dataset = oldDataset;
+          console.log(err);
+          alert(err.message);
+        }
+      }
+
+      function clearMsg(msgName) {
+          document.getElementById(msgName).innerHTML = '<div></div>';
+      }
+
+      function parseEvalResult(cform) {
+        var msg = '';
+        var cf = null;
+        if (cform.error) {
+          msg = '<div class="error">Error: ' + cform.error.message + '</div>';
+        } else {
+          msg = '<div class="result">optype: ' + cform.optypes;
+          if (cform.value) msg = msg + ', value: ' + cform.value;
+          msg = msg + '</div>';
+          cf = cform;
+        }
+        return [msg, cf];
+      }
+
+      function applyForm(form, inputName, outputName) {
+        var out = document.getElementById(outputName);
+        if (form == undefined || form.error) {
+           out.innerHTML = '<div class="error">You need to compile a '
+                           + 'valid expression first!</div>';
+        } else {
+          var v = document.getElementById(inputName).value;
+          v = v.trim();
+          var rows = v.split("\n").map(function(x){return x.split(",");});
+          var res = flatline.apply_form(form, rows);
+          res = res.map(function (x) {return x.join(', ');});
+          res = res.join('<br/>');
+          out.innerHTML = '<div class="result">' + res + '</div>';
+        }
+      }
+
+      // self executing function here
+      (function() {
+        var dsFile = document.getElementById('datasetFile');
+        dsFile.addEventListener('change', handleDatasetChange, false);
+
+        var jsonButton = document.getElementById('jsonEvalButton');
+        jsonButton.addEventListener('click', function() {
+          var result = document.getElementById('jsonResult');
+          var str = '';
+          clearMsg('jsonApplyOutput');
+          try {
+            str = JSON.parse(document.getElementById('jsonInput').value);
+            if (str == '') {
+              result.innerHTML = '<div class="error">No expression!</div>';
+            } else {
+              var pr = parseEvalResult(flatline.evaluate_js(str, dataset));
+              result.innerHTML = pr[0];
+              evaluatedJSON = pr[1];
+            }
+          } catch (err) {
+             result.innerHTML = '<div class="error">JSON parser error: ' +
+                                err.message + '</div>';
+          }
+        });
+
+        var lispButton = document.getElementById('lispEvalButton');
+        lispButton.addEventListener('click', function() {
+          var str = document.getElementById('lispInput').value;
+          var result = document.getElementById('lispResult');
+          clearMsg('lispApplyOutput');
+          if (str == '') {
+           result.innerHTML = '<div class="error">No expression!</div>';
+          } else {
+            var pr = parseEvalResult(flatline.evaluate_sexp(str, dataset));
+            result.innerHTML = pr[0];
+            evaluatedLisp = pr[1];
+          }
+        });
+
+        var toJSONButton = document.getElementById('lisp2JSONButton');
+        toJSONButton.addEventListener('click', function() {
+          try {
+            var lstr = document.getElementById('lispInput').value;
+            var json = JSON.stringify(flatline.sexp_to_js(lstr));
+            document.getElementById('jsonInput').value = json;
+            clearMsg('jsonResult')
+            clearMsg('jsonApplyOutput')
+          } catch (err) {
+            var r = document.getElementById('lispResult');
+            r.innerHTML = '<div class="error">' + err.message + '</div>';
+          }
+        });
+
+        var applyLisp = document.getElementById('lispApplyButton');
+        applyLisp.addEventListener('click', function () {
+          applyForm(evaluatedLisp, 'lispInputRow', 'lispApplyOutput');
+        });
+
+        var applyJSON = document.getElementById('jsonApplyButton');
+        applyJSON.addEventListener('click', function () {
+          applyForm(evaluatedJSON, 'jsonInputRow', 'jsonApplyOutput');
+        });
+
+        var toLispButton = document.getElementById('JSON2LispButton');
+        toLispButton.addEventListener('click', function() {
+          try {
+            var jsv = document.getElementById('jsonInput').value;
+            var lisp = flatline.js_to_sexp(JSON.parse(jsv));
+            document.getElementById('lispInput').value = lisp;
+            clearMsg('lispResult')
+            clearMsg('lispApplyOutput')
+          } catch (err) {
+            var r = document.getElementById('jsonResult');
+            r.innerHTML = '<div class="error">' + err.message + '</div>';
+          }
+        });
+
+      })();
+    </script>
+  </body>
+</html>
