@@ -86,7 +86,7 @@ class Sampler:
         return self.sample().get('rows')
 
     def fields(self):
-        """The list of field descriptiors for the current sample.
+        """The list of field descriptors for the current sample.
 
         See 'take_sample' for updating the current sample and 'sample'
         for the full set of its properties.
