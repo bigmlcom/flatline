@@ -17,6 +17,10 @@ import interpreter
 import bigml.api as api
 import os
 
+## local testing
+import requests.packages.urllib3
+requests.packages.urllib3.disable_warnings()
+
 class Sampler:
     """The Sampler class automatizes the process of sampling a dataset.
 

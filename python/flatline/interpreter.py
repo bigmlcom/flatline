@@ -49,8 +49,7 @@ class Interpreter:
         Usually, checks and applications of Flatline expressions run
         in the context of a given dataset's field descriptors, but
         during testing it's useful sometimes to provide a mock set of
-        them, based on the types of the values of the the test input
-        rows.
+        them, based on the types of the values of the test input rows.
 
         Example:
 
@@ -94,10 +93,10 @@ class Interpreter:
         """A list of the names of all defined Flaline functions"""
         return self.__eval_in_flatline('defined_primitives')
 
-    def check_lisp(self, sexp, dataset={}):
+    def check_lisp(self, sexp, dataset=None):
         """Checks whether the given lisp s-expression is valid.
 
-        Any operations referring to a dataset fields will use the
+        Any operations referring to a dataset's fields will use the
         information found in the provided dataset, which should have
         the structure of the 'object' component of a BigML dataset
         resource.
@@ -107,7 +106,7 @@ class Interpreter:
         r.pop(u'mapper', None)
         return r
 
-    def check_json(self, json_sexp, dataset={}):
+    def check_json(self, json_sexp, dataset=None):
         """Checks whether the given JSON s-expression is valid.
 
         Works like `check_lisp` (which see), but taking a JSON

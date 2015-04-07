@@ -31,7 +31,7 @@ implementation) that you can use from your browser or from a nodejs
 session.
 
 The [python directory](./python) contains a small Python library that
-wraps the nodejs interpreter and let's you interact with it using
+wraps the nodejs interpreter and lets you interact with it using
 Python.
 
 ## License
