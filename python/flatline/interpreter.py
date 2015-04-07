@@ -7,7 +7,7 @@
 """
 flatline.interpreter
 
-User level interface to the flatline interpreter.
+User level interface to the flatline JS interpreter.
 
 :author: jao <jao@bigml.com>
 :date: Sun Apr 05, 2015 01:40
