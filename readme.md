@@ -25,14 +25,19 @@ dataset).
 
 ## Local interpreters
 
+### Javascript and Node.js
+
 We include in [js](./js) Flatline interpreters implemented in
 Javascript (compiled by Clojurescript from our canonical server-side
 implementation) that you can use from your browser or from a nodejs
 session.
 
+### Python
+
 The [python directory](./python) contains a small Python library that
 wraps the nodejs interpreter and lets you interact with it using
-Python.
+Python.  See its [README](./python/README.md) for more information,
+including access to an iPython sample notebook.
 
 ## License
 
