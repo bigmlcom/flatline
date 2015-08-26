@@ -335,7 +335,7 @@ bounds.  For instance:
       (cond (< v 2) "baby"
             (< v 10) "child"
             (< v 20) "teenager"
-            "adult")
+            "adult"))
 ```
 
 Flatline provides a shortcut for the above expression via its
