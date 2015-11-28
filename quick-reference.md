@@ -83,6 +83,12 @@ Vectorize categorical and text fields:
      (vectorize <field-designator> [<max-fields>])
 ```
 
+Items:
+
+```
+     (contains-items? <field-designator> <item0> ... <itemn>)
+```
+
 ## Strings and regular expressions
 
 Conversion of any value to a string:

@@ -253,7 +253,7 @@ with the Flatline primitive `vectorize`:
 
 For categorical fields, the output is a binary indicator vector. In
 other words, it is a list of numeric fields, one per possible categorical
-value, and for each instance, the numeric field corresponding to the category of 
+value, and for each instance, the numeric field corresponding to the category of
 that instance will have a value of `1`, whereas the remaining numeric fields will have
 a value of `0`.
 
@@ -394,6 +394,31 @@ or, in general:
                 (< shift (* (- n 1) step)) <ln-1>
                 <ln>))
 ```
+
+#### Items and itemsets
+
+A common operation on fields of optype *items* is to check whether
+they contain a list of items.  That can be used, for instance, to
+filter the rows of a dataset that satisfy a given association rule,
+but calling `contains-items?` with the list of items in the antecedent
+and consequent of the desired rule.
+
+```
+   (contains-items? <field-designator> <item_0> ... <item_n>)
+   ;; with <item_i> of type string for i in [0, n]
+```
+
+The `contains-items` primitive takes as first argument the descriptor
+of the field we want to check (which must have optype items), followed
+by the one or more items we want to check, which must all have type
+string.  For instance, the predicate:
+
+```
+    (contains-items? "000000" "blue" "green" "darkblue")
+```
+
+will filter the rows whose first column satisfies the association rule
+`blue, green -> darkblue`.
 
 #### Field population, percentiles &co for numeric fields
 
