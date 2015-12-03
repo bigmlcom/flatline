@@ -1062,7 +1062,7 @@ value.  That's because the `<else>` branch is not even evaluated.
 Therefore:
 
 ```
-    (if (< (f 0) 3) 0 (if (missing? 0) 2 1))
+    (if (< (f 0) 3) 0 (if (missing? (f 0)) 2 1))
 ```
 
 will again evaluate to null when the field 0 is missing: it will *not*
@@ -1070,7 +1070,7 @@ evaluate to 2, because the `<else>` branch is never reached.  If you
 need to test for a missing value, the test must always come first:
 
 ```
-    (if (missing? 0) 2 (if (< (f 0) 3) 0 1))
+    (if (missing? (f 0) 2 (if (< (f 0) 3) 0 1))
 ```
 
 We also provide the `cond` operator, which allows a more compact
