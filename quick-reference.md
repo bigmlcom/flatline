@@ -87,6 +87,7 @@ Items:
 
 ```
      (contains-items? <field-designator> <item0> ... <itemn>)
+     (equal-to-items? <field-designator> <item0> ... <itemn>)
 ```
 
 ## Strings and regular expressions

@@ -420,6 +420,15 @@ string.  For instance, the predicate:
 will filter the rows whose first column satisfies the association rule
 `blue, green -> darkblue`.
 
+It is also possible to check whether an items field contains *only* the given
+list of items (in any order), using `equal-to-items?`, which works exactly
+as `contains-items?` except for the fact that it's exclusive:
+
+```
+   (equals-to-items? <field-designator> <item_0> ... <item_n>)
+   ;; with <item_i> of type string for i in [0, n]
+```
+
 #### Field population, percentiles &co for numeric fields
 
 Besides direct readings from the field summaries, there exist other
