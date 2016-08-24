@@ -804,7 +804,7 @@ missing value.
 
 We provide a host of mathematical functions:
 
-````
+```
     (max <x0> ... <xn>)
     (min <x0> ... <xn>)
 
@@ -851,6 +851,8 @@ Currently there's no way of specifying the seed used for random number
 generation, but it's coming shortly to a selected data generation
 language very near to you.
 
+### Regression
+
 It's also possible to compute the slope, intercept and Pearson
 coeffient of the linear regression of a set of points given as a list
 of alternating x and y coordinates:
@@ -866,6 +868,29 @@ e.g.
      (linear-regression 1 1 2 2 3 3 4 4) => (1.0 0 1.0)
      (linear-regression 2.0 3.1 2.3 3.3 24.3 45.2) => (1.89 -0.87 0.9999)
 ```
+
+### Statistical functions
+
+The function `chi-square-p-value` computes the p-value of a Chi-square
+distribution with the given number of degrees of freedom and a given
+cut value:
+
+```
+    (chi-square-p-value <d> <x>)
+      ;; => <p-value>, with <d> integer <x> a number
+```
+
+Thus, the value `x` passes the Chi-square test if the value returned
+by `(chi-square-p-value d x)` is less than or equal to `x`.  For
+instance, the expression:
+
+```
+   (<= (chi-square-p-value 2 (field "000000")) 0.05)
+```
+
+will compute a boolean that tells you whether the field "000000"
+passes a Chi-square test for two degrees of freedom with significance
+level 0.05.
 
 ## Dates and times
 

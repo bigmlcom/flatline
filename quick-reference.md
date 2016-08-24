@@ -90,6 +90,13 @@ Items:
      (equal-to-items? <field-designator> <item0> ... <itemn>)
 ```
 
+Clustering:
+
+```
+     (row-distance <list-of-field-values> [<list-of-field-values> <weights>])
+     (row-distance-squared <list-of-field-values> [<list-of-field-values> <weights>])
+```
+
 ## Strings and regular expressions
 
 Conversion of any value to a string:
@@ -163,7 +170,8 @@ Mathematical functions:
     (exp <x>)     ;; Exponential
     (floor <x>)
     (ln <x>)      ;; Natural logarithm
-    (log <x>)     ;; Base-2 logarithm
+    (log <x>)     ;; Natural logarithm
+    (log2 <x>)    ;; Base-2 logarithm
     (log10 <x>)   ;; Base-10 logarithm
     (max <x0> ... <xn>)
     (min <x0> ... <xn>)
@@ -182,6 +190,7 @@ Mathematical functions:
     (to-degrees <x>) ;; <x> := radians
     (to-radians <x>) ;; <x> := degrees
     (linear-regression <x1> <y1> ... <xn> <yn>) ;; slope, intercept, pearson
+    (chi-square-p-value <degrees of freedom> <value>)
 ```
 
 ## Coercions
