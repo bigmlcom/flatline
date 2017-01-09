@@ -19,3 +19,4 @@ set_credentials.sh
 docs/_build/*
 *~
 /python/notebooks/.ipynb_checkpoints/
+_build
