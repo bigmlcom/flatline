@@ -159,7 +159,7 @@ Logical operators:
 
 Mathematical functions:
 
-````
+```
     (abs <x>)     ;; Absolute value
     (acos <x>)
     (asin <x>)

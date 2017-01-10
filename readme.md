@@ -1,4 +1,4 @@
-[![Documentation Status](https://readthedocs.org/projects/flatline/badge/?version=latest)](http://flatline.readthedocs.io/en/latest/user-manual.html?badge=latest)
+[![Documentation Status](https://readthedocs.org/projects/flatline/badge/?version=latest)](http://flatline.readthedocs.io/en/latest/?badge=latest)
 
 # Flatline, a language for data generation and filtering
 
