@@ -21,9 +21,11 @@ dataset).
 
 ## Documentation
 
-  - [Flatline's user manual](user-manual.md).
-  - [Quick reference](quick-reference.md) with all pre-defined
+  - [Flatline's user manual](docs/user-manual.md).
+  - [Quick reference](docs/quick-reference.md) with all pre-defined
     functions.
+  - Or see the HTML version in
+    [Read the Docs](http://flatline.readthedocs.io/en/latest/?badge=latest).
 
 ## Local interpreters
 
