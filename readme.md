@@ -1,3 +1,5 @@
+[![Documentation Status](https://readthedocs.org/projects/flatline/badge/?version=latest)](http://flatline.readthedocs.io/en/latest/user-manual.html?badge=latest)
+
 # Flatline, a language for data generation and filtering
 
 Flatline is a lispy language for the specification of values to be
