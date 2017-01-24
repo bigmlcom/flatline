@@ -22,7 +22,7 @@ syntax are valid expressions.
 
 Examples:
 
-.. code:: flatline
+.. code:: lisp
 
        1258
        2.349
@@ -69,7 +69,7 @@ input row.
 So, for instance, these sexps denote field values extracted from the
 current row:
 
-.. code:: flatline
+.. code:: lisp
 
           (field 0)
           (field 0 0)
@@ -78,7 +78,7 @@ current row:
 
 while
 
-.. code:: flatline
+.. code:: lisp
 
           (field "000001" -2)
 
@@ -86,7 +86,7 @@ denotes the value of the cell corresponding to a field with identifier
 "000001" two rows *before* the current one. Positive shift values denote
 rows after the current one.
 
-.. code:: flatline
+.. code:: lisp
 
           (field "a field" 3)
           (field "another field" 2)
@@ -94,7 +94,7 @@ rows after the current one.
 For convenience, and since ``field`` is probably going to be your most
 often user operator, it can be abbreviated to ``f``:
 
-.. code:: flatline
+.. code:: lisp
 
           (f "000001" -2)
           (f 3 1)
@@ -110,7 +110,7 @@ if any) is a missing token:
 
 E.g.:
 
-.. code:: flatline
+.. code:: lisp
 
           (missing? "species")
           (missing? "000001" -2)
@@ -133,7 +133,7 @@ value in the domain of a given field, given its designator:
 
 e.g.
 
-.. code:: flatline
+.. code:: lisp
 
          (random-value "age")
          (weighted-random-value "000001")
@@ -161,7 +161,7 @@ generated values satisfying:
 A common use of these functions is replacing missing values with random
 data, which in Flatline you could write as, say:
 
-.. code:: flatline
+.. code:: lisp
 
         (if (missing? "00000") (random-value "000000") (f "000000"))
 
@@ -178,14 +178,14 @@ We provide a shortcut for those common operations with the functions
 
 We them, our example above can be simply written as:
 
-.. code:: flatline
+.. code:: lisp
 
        (ensure-value "000000")
 
 or, if you want that the generated random values follow the same
 distribution as the field "000000":
 
-.. code:: flatline
+.. code:: lisp
 
        (ensure-weighted-value "000000")
 
@@ -207,7 +207,7 @@ bounds of the resulting interval:
 
 For instance:
 
-.. code:: flatline
+.. code:: lisp
 
          (normalize "000001") ;; = (normalize "000001" 0 1)
          (normalize "width" -1 1)
@@ -240,7 +240,7 @@ the function ``z-score``:
 
 E.g.:
 
-.. code:: flatline
+.. code:: lisp
 
         (z-score "000034")
         (z-score "a numeric field")
@@ -290,14 +290,14 @@ be accessed via ``field-prop``:
 
 For instance, you can access the name for field "00023" via:
 
-.. code:: flatline
+.. code:: lisp
 
            (field-prop string "00023" name)
 
 or the value of the nested property missing\_count inside the summary
 with:
 
-.. code:: flatline
+.. code:: lisp
 
            (field-prop numeric "00023" summary missing_count)
 
@@ -327,7 +327,7 @@ As you can see, the category and count accessors take an additional
 parameter designating either the category (a string or order number) and
 the bin (a 0-based integer index) you refer to:
 
-.. code:: flatline
+.. code:: lisp
 
          (category-count "species" "Iris-versicolor")
          (category-count "species" (f "000004"))
@@ -342,7 +342,7 @@ A simple way to discretize a numeric field is to assign a label to each
 of a finite set of segments, defined by a sequence of upper bounds. For
 instance:
 
-.. code:: flatline
+.. code:: lisp
 
         (let (v (f "age"))
           (cond (< v 2) "baby"
@@ -353,7 +353,7 @@ instance:
 Flatline provides a shortcut for the above expression via its
 ``segment-label`` primitive:
 
-.. code:: flatline
+.. code:: lisp
 
        (segment-label "000000" "baby" 2 "child" 10 "teenager" 20 "adult")
 
@@ -376,13 +376,13 @@ If you want to use segments of equal length between the minimum and
 maximum value of the field, you can omit the upper bounds and give
 simply the list of labels, e.g.
 
-.. code:: flatline
+.. code:: lisp
 
         (segment-label 0 "1st fourth" "2nd fourth" "3rd fourth" "4th fourth")
 
 which would be equivalent to:
 
-.. code:: flatline
+.. code:: lisp
 
         (let (max (maximum 0)
               min (minimum 0)
@@ -426,7 +426,7 @@ of the field we want to check (which must have optype items), followed
 by the one or more items we want to check, which must all have type
 string. For instance, the predicate:
 
-.. code:: flatline
+.. code:: lisp
 
         (contains-items? "000000" "blue" "green" "darkblue")
 
@@ -463,14 +463,14 @@ must have in order to be in the given population fraction. Thus, you
 could use, for instance, the following predicate in a filter to remove
 outliers:
 
-.. code:: flatline
+.. code:: lisp
 
          (<= (percentile "age" 0.5) (f "age") (percentile "age" 0.95))
 
 We provide syntactic sugar for the above expression via
 ``within-percentiles?``:
 
-.. code:: flatline
+.. code:: lisp
 
          (within-percentiles? "age" 0.5 0.95)
 
@@ -483,7 +483,7 @@ Finally, ``percentile-label`` computes the percentile the input value
 belongs to and generates the label you provided. For instance, this
 generator:
 
-.. code:: flatline
+.. code:: lisp
 
         (percentile-label "000023" "1st" "2nd" "3rd" "4th")
 
@@ -491,7 +491,7 @@ will generate the label "1st" if the value of the field 000023 is in the
 first population "quartile" (since we're providing 4 labels, we use 4
 segments), "2nd" to the second, etc. The sexp above is equivalent to:
 
-.. code:: flatline
+.. code:: lisp
 
         (cond (within-percentiles? "000023" 0 0.25) "1st"
               (within-percentiles? "000023" 0.25 0.5) "2nd"
@@ -525,7 +525,7 @@ than one argument:
 
 For instance:
 
-.. code:: flatline
+.. code:: lisp
 
         (str 1 "hello " (field "a"))   ;; =>  "1hello <value of field a>"
         (str "value_" (+ 3 4) "/" (name "000001"))  ;; => "value_7/a"
@@ -553,7 +553,7 @@ The number of characters in a string value is given by ``length``:
 
 e.g.
 
-.. code:: flatline
+.. code:: lisp
 
          (length "abc") => 3
          (length "") => 0
@@ -569,7 +569,7 @@ between two given string values:
 
 Arbitrary arguments are allowed, provided they're strings:
 
-.. code:: flatline
+.. code:: lisp
 
         (levenshtein (f 0) "a random string")
         (if (< (levenshtein (f 0) "bluething") 5) "bluething" (f 0))
@@ -594,7 +594,7 @@ same term).
 
 For instance:
 
-.. code:: flatline
+.. code:: lisp
 
         (occurrences "howdy woman, howdy" "howdy") => 2
         (occurrences "howdy woman" "Man" true) => 0
@@ -609,7 +609,7 @@ There are several hashing functions available: ``md5``, ``sha1`` and
 string and return a string representing the bytes that the cryptographic
 digest they name produces, in their hexadecimal representation:
 
-.. code:: flatline
+.. code:: lisp
 
          (md5 <string>) => string of length 32
          (sha1 <string>) => string of length 40
@@ -617,7 +617,7 @@ digest they name produces, in their hexadecimal representation:
 
 e.g.
 
-.. code:: flatline
+.. code:: lisp
 
          (md5 "a text") => "b229386ec4627869d2c71b7df3c9600a"
          (sha1 "a text") => "7081f2babbafff16b4bae16282859c844baa14ef"
@@ -651,7 +651,7 @@ mode.
 For instance, to check if the field "name" contains the word "Hal"
 anywhere, you could use:
 
-.. code:: flatline
+.. code:: lisp
 
          (matches? (field "name") ".*\\sHal\\s.*")
          (matches? (field "name") "(?i).*\\shal\\s.*")
@@ -670,14 +670,14 @@ field, use ``re-quote``:
 
 and then you can write things like:
 
-.. code:: flatline
+.. code:: lisp
 
           (if (matches? (f "result") (re-quote (f "target"))) "GOOD" "MISS")
 
 and you can use the string concatenation operator ``str`` to construct
 regular expressions strings out of smaller pieces:
 
-.. code:: flatline
+.. code:: lisp
 
           (matches? (f "name") (str "^" (re-quote (f "salutation")) "\\s *$"))
 
@@ -694,7 +694,7 @@ by a given replacement string using ``replace`` and ``replace-first``:
 
 e.g.:
 
-.. code:: flatline
+.. code:: lisp
 
          (replace "Target string ss" "\\Ws" "S") => "TargetStringSs"
 
@@ -706,7 +706,7 @@ like.
 
 For example:
 
-.. code:: flatline
+.. code:: lisp
 
          (replace "Almost Pig Latin" "\\b(\\w)(\\w+)\\b" "$2$1ay")
           => "lmostAay igPay atinLay"
@@ -714,7 +714,7 @@ For example:
 While ``replace`` replaces all occurrences of the regular expression,
 ``replace-first`` stops after the first match:
 
-.. code:: flatline
+.. code:: lisp
 
          (replace-first "swap first two words" "(\\w+)(\\s+)(\\w+)" "$3$2$1")
           => "first swap two words"
@@ -732,7 +732,7 @@ of the detected language, as a string.
 
 For instance:
 
-.. code:: flatline
+.. code:: lisp
 
         (language "this is an English phrase") => "en"
 
@@ -749,7 +749,7 @@ You can compare numeric and datetime values with any of the relational
 operators ``<``, ``<=``, ``>``, and ``>=``, which can be applied to two
 or more arguments and always result in a boolean value. For example:
 
-.. code:: flatline
+.. code:: lisp
 
        (< (field 0) (field 1))
        (<= (field 0 -1) (field 0) (field 0 1))
@@ -759,7 +759,7 @@ or more arguments and always result in a boolean value. For example:
 The equality (``=``) and inequality (``!=``) operators can be applied to
 operators of any kind:
 
-.. code:: flatline
+.. code:: lisp
 
        (= "Dante" (field "Author"))
        (= 1300 (field "Year"))
@@ -778,7 +778,7 @@ Logical operators
 The basic logical connectives ``and``, ``or`` and ``not``, acting on
 boolean values, are available, with their usual meanings.
 
-.. code:: flatline
+.. code:: lisp
 
        (and (= 3 (field 1)) (= "meh" (f "a")) (< (f "pregnancies") 5))
        (not true)
@@ -863,7 +863,7 @@ We provide a host of mathematical functions:
 
 As well as two primitives for generating random numbers:
 
-.. code:: flatline
+.. code:: lisp
 
          (rand)            ;; a random double in [0, 1)
          (rand-int <n>)    ;; a random integer in [0, n) or (n, 0]
@@ -886,7 +886,7 @@ alternating x and y coordinates:
 
 e.g.
 
-.. code:: flatline
+.. code:: lisp
 
          (linear-regression 1 1 2 2 3 3 4 4) => (1.0 0 1.0)
          (linear-regression 2.0 3.1 2.3 3.3 24.3 45.2) => (1.89 -0.87 0.9999)
@@ -907,7 +907,7 @@ Thus, the value ``x`` passes the Chi-square test if the value returned
 by ``(chi-square-p-value d x)`` is less than or equal to ``x``. For
 instance, the expression:
 
-.. code:: flatline
+.. code:: lisp
 
        (<= (chi-square-p-value 2 (field "000000")) 0.05)
 
@@ -944,7 +944,7 @@ functions to expand an epoch to its date-time components:
 
 For instance:
 
-.. code:: flatline
+.. code:: lisp
 
         (epoch-fields (f "milliseconds"))
         (epoch-year (* 1000 (f "seconds")))
@@ -966,7 +966,7 @@ arithmetic operation, it's automatically converted to an epoch (i.e., an
 integer value) for you. For instance, the two following expressions for
 computing the number of seconds since 1970 are equivalent:
 
-.. code:: flatline
+.. code:: lisp
 
          (/ (f "a-datetime-string") 1000)
          (/ (epoch (f "a-datetime-string")) 1000)
@@ -990,7 +990,7 @@ patterns <http://www.joda.org/joda-time/key_format.html>`__.
 
 For instance:
 
-.. code:: flatline
+.. code:: lisp
 
         (epoch-fields (epoch "1969-14-07T06:00:12")) => [1969 14 07 06 00 12 0]
         (epoch-hour (epoch "11~22~30" "hh~mm~ss")) => 11
@@ -1077,7 +1077,7 @@ form:
 The binding values are evaluated sequentially and can then be referenced
 in the body of the let expression by their names:
 
-.. code:: flatline
+.. code:: lisp
 
         (let (x (+ (window "a" -10 10))
               a (/ (* x 3) 4.34)
@@ -1087,7 +1087,7 @@ in the body of the let expression by their names:
 As shown in the example above, value expressions can use any identifier
 previously defined in the same list:
 
-.. code:: flatline
+.. code:: lisp
 
         (let (x 43
               x (+ x 1)
@@ -1097,7 +1097,7 @@ previously defined in the same list:
 Finally, let expressions can nested and they can appear wherever a
 Flatline expression is valid:
 
-.. code:: flatline
+.. code:: lisp
 
          (list (let (z (f 0)) (* 2 (* z z) (log z)))
                (let (pi 3.141592653589793 r (f "radius")) (* 4 pi r r)))
@@ -1121,7 +1121,7 @@ You can use arbitrary expressions for ``<cond>``, ``<then>`` and
 value. If not provided, ``<else>`` defaults to a "nil" value that
 denotes a missing token.
 
-.. code:: flatline
+.. code:: lisp
 
        (if (< (field "age") 18) "non-adult" "adult")
 
@@ -1140,7 +1140,7 @@ values, namely ``true``, ``false`` and **missing**. If the ``<cond>`` in
 an ``if`` expression is a missing value, **the whole expression will
 evaluate to a missing value**. That means that, for instance:
 
-.. code:: flatline
+.. code:: lisp
 
         (if (< (f 0) 3) 0 1)
 
@@ -1148,7 +1148,7 @@ will evaluate to null (and *not* to 1) when the field 0 has a missing
 value. That's because the ``<else>`` branch is not even evaluated.
 Therefore:
 
-.. code:: flatline
+.. code:: lisp
 
         (if (< (f 0) 3) 0 (if (missing? 0) 2 1))
 
@@ -1156,7 +1156,7 @@ will again evaluate to null when the field 0 is missing: it will *not*
 evaluate to 2, because the ``<else>`` branch is never reached. If you
 need to test for a missing value, the test must always come first:
 
-.. code:: flatline
+.. code:: lisp
 
         (if (missing? 0) 2 (if (< (f 0) 3) 0 1))
 
@@ -1177,7 +1177,7 @@ not provided.
 
 For instance:
 
-.. code:: flatline
+.. code:: lisp
 
         (cond (> (f "000001") (mean "000001")) "above average"
               (= (f "000001") (mean "000001")) "below average"
@@ -1198,7 +1198,7 @@ The same caveat with ``if`` regarding missing values applies to
 whole expression evaluates to a missing value**. Therefore, checks using
 ``missing?`` must always come first:
 
-.. code:: flatline
+.. code:: lisp
 
         ;;; CORRECT
         (cond (missing? "age") 0
@@ -1221,7 +1221,7 @@ It's possible to create a list of values using the ``list`` operator:
 
 with the values any valid Flatline expression, e.g.:
 
-.. code:: flatline
+.. code:: lisp
 
         (list (field "age")
               (field "weight" -1)
@@ -1293,7 +1293,7 @@ Finally, you can check whether a value appears in a list using the
 
 which evaluates to ``true`` if any of the ``<xi>`` equals ``<x>``, e.g.:
 
-.. code:: flatline
+.. code:: lisp
 
        (in 3 (1 2 3 2)) => true
        (in "abc" (1 2 3)) => false
@@ -1315,7 +1315,7 @@ list, yielding a list of results, using the ``map`` primitive:
 An expression template is any valid Flatline expression that uses ``_``
 as a placeholder:
 
-.. code:: flatline
+.. code:: lisp
 
        (< _ 3)
        (+ (f "000001" _) 3)
@@ -1325,13 +1325,13 @@ and when you ``call`` a template with an argument, a new expression is
 generated by the simple device of substituting the argument for ``_`` in
 the template. For instance:
 
-.. code:: flatline
+.. code:: lisp
 
        (map (* 2 _) (list (f 0 -1) (f 0) (f 0 1)))
 
 expands to
 
-.. code:: flatline
+.. code:: lisp
 
        ((* 2 (f 0 1)) (* 2 (f 0)) (* 2 (f 0 1)))
 
@@ -1345,7 +1345,7 @@ that satisfy it:
 
 For instance,
 
-.. code:: flatline
+.. code:: lisp
 
       (+ (filter (< _ 3) (fields "a" "b" "c")))
 
@@ -1386,7 +1386,7 @@ the current input row:
 In both ``all-but`` and ``fields``, fields can be designated, as usual,
 with either their identifier, name or ``column_number``:
 
-.. code:: flatline
+.. code:: lisp
 
        (all-but "id" "000023")
        (fields "000003" 3 "a field" "another" "0002a3b-3")
@@ -1406,7 +1406,7 @@ The list of designator/value pairs does not need to be exhaustive or
 ordered, and again the designator can be a field id, name, or column
 number:
 
-.. code:: flatline
+.. code:: lisp
 
         (all-with-defaults "species" "Iris-versicolor"
                            "petal-width" 2.8
@@ -1425,7 +1425,7 @@ their mean, median, minimum or maximum values (as read from their
 respective field descriptors) or with any concrete numeric value. For
 example:
 
-.. code:: flatline
+.. code:: lisp
 
         (all-with-numeric-default "median")
         (all-with-numeric-default 0)
@@ -1455,13 +1455,13 @@ over the shifted field accessors we've already seen:
 
 So, for instance, the window:
 
-.. code:: flatline
+.. code:: lisp
 
         (window "000001" -1 2)
 
 denotes the list of values:
 
-.. code:: flatline
+.. code:: lisp
 
         (list (f "000001" -1) (f "000001" 0) (f "000001" 1) (f "000001" 2))
 
@@ -1472,14 +1472,14 @@ It's possible to apply arithmetic operators, ``filter`` and ``map`` to
 any window. For instance, you could compute the average of the last 3
 values of a field as:
 
-.. code:: flatline
+.. code:: lisp
 
        (/ (+ (window "Temp" -2 0) 3))
 
 Or convert all the values to Fahrenheit degrees and select those below
 99.9 with:
 
-.. code:: flatline
+.. code:: lisp
 
        (filter (< _ 99.9) (map (+ 32 (* 1.8 _)) (window "Temp" -2 0)))
 
@@ -1515,7 +1515,7 @@ whose width depends on some condition. For instance, say you want to
 compute the average of a temperature for the last four minutes in a
 dataset with aperiodic entries: ``cond-window`` to the rescue:
 
-.. code:: flatline
+.. code:: lisp
 
         (let (now (f "epoch"))
           (avg (cond-window "temperature" (< (- (f "epoch") now) 240))))

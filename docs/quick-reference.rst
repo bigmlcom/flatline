@@ -6,7 +6,7 @@ Field accessors and properties
 
 Access to input field values:
 
-.. code:: flatline
+.. code:: lisp
 
          (field <field-designator> [<shift>])
          (f <field-designator> [<shift>])
@@ -18,7 +18,7 @@ Access to input field values:
 
 All fields in a row:
 
-.. code:: flatline
+.. code:: lisp
 
          (all)
          (all-but <field-designator> ... <field-designator-n>)
@@ -30,13 +30,13 @@ All fields in a row:
 
 Row properties:
 
-.. code:: flatline
+.. code:: lisp
 
         (row-number) ;;  current row number, 0-based
 
 Field properties:
 
-.. code:: flatline
+.. code:: lisp
 
         (bin-center <field-designator> <bin-number>)  ;;  number
         (bin-count <field-designator> <bin-number>) ;;  number
@@ -56,14 +56,14 @@ Field properties:
 
 Normalization:
 
-.. code:: flatline
+.. code:: lisp
 
          (normalize <id> [<from> <to>]) ;; [from to] defaults to [0, 1]
          (z-score <id>)
 
 Percentiles and population:
 
-.. code:: flatline
+.. code:: lisp
 
         (percentile <field-designator> <fraction>) ;;  number
         (population-fraction <field-designator> <fraction>) ;;  integer
@@ -72,7 +72,7 @@ Percentiles and population:
 
 Segments:
 
-.. code:: flatline
+.. code:: lisp
 
         (segment-label <field-designator>
                        <label-1> <bound-1>
@@ -83,20 +83,20 @@ Segments:
 
 Vectorize categorical and text fields:
 
-.. code:: flatline
+.. code:: lisp
 
          (vectorize <field-designator> [<max-fields>])
 
 Items:
 
-.. code:: flatline
+.. code:: lisp
 
          (contains-items? <field-designator> <item0> ... <itemn>)
          (equal-to-items? <field-designator> <item0> ... <itemn>)
 
 Clustering:
 
-.. code:: flatline
+.. code:: lisp
 
          (row-distance <list-of-field-values> [<list-of-field-values> <weights>])
          (row-distance-squared <list-of-field-values> [<list-of-field-values> <weights>])
@@ -106,19 +106,19 @@ Strings and regular expressions
 
 Conversion of any value to a string:
 
-.. code:: flatline
+.. code:: lisp
 
         (str <sexp0> ...) ;;  string
 
 Substrings:
 
-.. code:: flatline
+.. code:: lisp
 
         (subs <string> <start> [<end>]) ;;  string
 
 Regexps:
 
-.. code:: flatline
+.. code:: lisp
 
         (matches? <string> <regex-string>)  ;;  boolean
         (re-quote <string>)  ;;  regexp that matches <string> literally
@@ -127,7 +127,7 @@ Regexps:
 
 Utilities:
 
-.. code:: flatline
+.. code:: lisp
 
         (length <string>) ;;  integer
         (levenshtein <str-sexp0> <str-sexp1>)  ;;  number
@@ -136,7 +136,7 @@ Utilities:
 
 Hashing:
 
-.. code:: flatline
+.. code:: lisp
 
          (md5 <string>) ;;  string of length 32
          (sha1 <string>) ;;  string of length 40
@@ -147,25 +147,25 @@ Math and logic
 
 Arithmetic operators:
 
-.. code:: flatline
+.. code:: lisp
 
        + - * / div mod
 
 Relational operators:
 
-.. code:: flatline
+.. code:: lisp
 
        < <= > >= = !=
 
 Logical operators:
 
-.. code:: flatline
+.. code:: lisp
 
       and or not
 
 Mathematical functions:
 
-.. code:: flatline
+.. code:: lisp
 
         (abs <x>)     ;; Absolute value
         (acos <x>)
@@ -202,7 +202,7 @@ Mathematical functions:
 Coercions
 ---------
 
-.. code:: flatline
+.. code:: lisp
 
         (integer <sexp>) ;;  integer
         (real <sexp>) ;;  real
@@ -214,7 +214,7 @@ Dates and time
 Functions taking a number representing the *epoch*, i.e., the number of
 **milliseconds** since Jan 1st 1970.
 
-.. code:: flatline
+.. code:: lisp
 
         (epoch-year <n>) ;;  number
         (epoch-month <n>) ;;  number
@@ -228,7 +228,7 @@ Functions taking a number representing the *epoch*, i.e., the number of
 
 Any string can be coerced to an epoch:
 
-.. code:: flatline
+.. code:: lisp
 
         (epoch <string> [<format>])
 
@@ -237,7 +237,7 @@ Conditionals and local variables
 
 Conditionals:
 
-.. code:: flatline
+.. code:: lisp
 
        (if <cond> <then> [<else>])
 
@@ -248,7 +248,7 @@ Conditionals:
 
 For example:
 
-.. code:: flatline
+.. code:: lisp
 
         (cond (> (f "000001") (mean "000001")) "above average"
               (= (f "000001") (mean "000001")) "below average"
@@ -256,7 +256,7 @@ For example:
 
 Local variables:
 
-.. code:: flatline
+.. code:: lisp
 
         (let <bindings> <body>)
         <bindings> := (<varname0> <val0> ...  <varnamen> <valn>)
@@ -264,7 +264,7 @@ Local variables:
 
 For example:
 
-.. code:: flatline
+.. code:: lisp
 
         (let (x (+ (window "a" -10 10))
               a (/ (* x 3) 4.34)
@@ -276,7 +276,7 @@ Lists
 
 Creation and elememt access:
 
-.. code:: flatline
+.. code:: lisp
 
         (list <sexp-0> ... <sexp-n>) ;;  list of given values
         (cons <head> <tail>) ;;  list
@@ -286,13 +286,13 @@ Creation and elememt access:
 
 Inclusion:
 
-.. code:: flatline
+.. code:: lisp
 
         (in <value> <list>) ;;  boolean
 
 Properties of lists:
 
-.. code:: flatline
+.. code:: lisp
 
         (count <list>)         ;; (count (list (f 1) (f 2))) => 2
         (mode <list>)          ;; (mode (list a b b c b a c c c))  => "c"
@@ -302,14 +302,14 @@ Properties of lists:
 
 List transformations:
 
-.. code:: flatline
+.. code:: lisp
 
         (map <fn> (list <a0> <a1> ... <an>))
         (filter <fn> (list <a0> ... <an>))
 
 Field lists and windows:
 
-.. code:: flatline
+.. code:: lisp
 
         (fields <field-designator> ... <field-designator-n>)
         (window <field-designator> <start> <end>)
