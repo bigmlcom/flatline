@@ -17,5 +17,8 @@ expressions is provided, each one generating either a value or a list of
 values, which are then concatenated together to conform the output rows
 (each value representing therefore a field in the generated dataset).
 
--  `User manual <user-manual.html>`__
--  `Quick reference <quick-reference.html>`__
+.. toctree::
+   :maxdepth: 1
+
+   user-manual
+   quick-reference
