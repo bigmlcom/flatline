@@ -795,7 +795,7 @@ Arithmetical operators
 ----------------------
 
 The usual arithmetical operators ``+``, ``-``, ``*`` and
-``/' taking any number of arguments (or zero, for``\ +\ ``and``\ \*\`)
+``/`` taking any number of arguments (or zero, for``\ +\ ``and``\ \*\`)
 are available. Of course their operands must evaluate to a numeric
 value; otherwise, the result will be nil, representing a missing value.
 
@@ -929,6 +929,7 @@ functions to expand an epoch to its date-time components:
 
         (epoch-year <n>)
         (epoch-month <n>)
+        (epoch-week <n>)
         (epoch-day <n>)
         (epoch-weekday <n>)
         (epoch-hour <n>)
@@ -954,6 +955,10 @@ prior to 1970.
 
 The day of the week (given by ``epoch-weekday``) is a number from 1
 (Monday) to 7 (Sunday).
+
+The week within the year, given by ``epoch-week``, is a number between
+1 and 52.  Note that it is not included in the oputput of
+``epoch-fields``.
 
 Datetime arithmetic
 ~~~~~~~~~~~~~~~~~~~

@@ -218,6 +218,7 @@ Functions taking a number representing the *epoch*, i.e., the number of
 
         (epoch-year <n>) ;;  number
         (epoch-month <n>) ;;  number
+        (epoch-week <n>) ;; number
         (epoch-day <n>) ;;  number
         (epoch-weekday <n>) ;;  number
         (epoch-hour <n>) ;;  number
