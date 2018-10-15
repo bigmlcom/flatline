@@ -1267,8 +1267,9 @@ nil (a missing token).
 List operators
 ~~~~~~~~~~~~~~
 
-Given a list value, you can count its elements, obtain their mode and,
-when its values are numeric, compute the maximum minimum and average:
+Given a list value, you can count its elements, obtain their median,
+mode and, when its values are numeric, compute the maximum minimum and
+average:
 
 ::
 
@@ -1277,6 +1278,7 @@ when its values are numeric, compute the maximum minimum and average:
        (max <list>)           ;; (max (list -1 2 -2 0.38)) => 2
        (min <list>)           ;; (min (list -1.3 2 1)) => -1.3
        (avg <list>)           ;; (avg (list -1 -2 1 2 0.8 -0.8)) => 0
+       (list-median <list>)   ;; (list-median (list -1 -2 1 2 0.8 -0.8) => 1
 
 And, as we have mentioned, the arithmetic operators ``+``, ``-``, ``*``
 and ``/`` are, like ``max`` and ``min``, overloaded to distribute over
@@ -1288,6 +1290,21 @@ the elements of a numeric list:
        (- (list x y ...)) := (- x y ...)
        (* (list x y ...)) := (* x y ...)
        (/ (list x y ...)) := (/ x y ...)
+
+One can ``reverse`` and ``sort`` (in ascending lexicographical order)
+any list:
+
+::
+       (reverse <list>)
+       (sort <list>)
+
+E.g.
+
+.. code:: lisp
+
+       (reverse (list "a" 0 2 "b")) => ("b" 2 0 "a")
+       (sort (list 1 3 -1 2))  => (-1 2 1 3)
+       (sort (list "a" "b" "aa")) => ("a" "aa" "b")
 
 Finally, you can check whether a value appears in a list using the
 ``in`` operator:
@@ -1489,19 +1506,23 @@ Or convert all the values to Fahrenheit degrees and select those below
        (filter (< _ 99.9) (map (+ 32 (* 1.8 _)) (window "Temp" -2 0)))
 
 In addition to the plain ``window`` generator, we provide some other
-convenience window primitives computing, respectively, the average value
-of the values in a window, their sum and the sequence of their
-differences:
+convenience window primitives computing, respectively, the average
+value, median and of the values in a window, their sum and the
+sequence of their differences:
 
 ::
 
-       (avg-window <field-designator> <start> <end>)
-         := (/ (+ (window <field-designator> <start> <end>)) (+ 1 (- <start> <end>))
+       (window-median <field-designator> <start> <end>)
+         := (list-median (window <field-designator> <start> <end>))
 
+       (window-mean <field-designator> <start> <end>)
+         := (avg (window <field-designator> <start> <end>))
 
-       (sum-window <field-designator> <start> <end>)
+       (window-mode <field-designator> <start> <end>)
+         := (mode (window <field-designator> <start> <end>))
+
+       (window-sum <field-designator> <start> <end>)
          := (+ (window <field-designator> <start> <end>))
-
 
        (diff-window <fdes> <start> <end>)
          := (list (- (f <fdes> <start>) (f <fdes> (- <start> 1)))

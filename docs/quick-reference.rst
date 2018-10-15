@@ -296,10 +296,11 @@ Properties of lists:
 .. code:: lisp
 
         (count <list>)         ;; (count (list (f 1) (f 2))) => 2
-        (mode <list>)          ;; (mode (list a b b c b a c c c))  => "c"
         (max <list>)           ;; (max (list -1 2 -2 0.38))  => 2
         (min <list>)           ;; (min (list -1.3 2 1))  => -1.3
         (avg <list>)           ;; (avg (list -1 -2 1 2 0.8 -0.8)) => 0
+        (list-median <list>)   ;; (list-median (list -1 -2 1 2 0.8 -0.8) => 1
+        (mode <list>)          ;; (mode (list a b b c b a c c c))  => "c"
 
 List transformations:
 
@@ -307,6 +308,8 @@ List transformations:
 
         (map <fn> (list <a0> <a1> ... <an>))
         (filter <fn> (list <a0> ... <an>))
+        (reverse <list>)
+        (sort <list>)  ;; sorts, in increasing order, a list of values
 
 Field lists and windows:
 
@@ -314,7 +317,9 @@ Field lists and windows:
 
         (fields <field-designator> ... <field-designator-n>)
         (window <field-designator> <start> <end>)
-        (avg-window <field-designator> <start> <end>)  ;; average of values
-        (sum-window <field-designator> <start> <end>) ;; sum of values
         (diff-window <fdes> <start> <end>) ;; differences of consecutive values
         (cond-window <fdes> <sexp>)        ;; values that satisfy boolean sexp
+        (window-sum <field-designator> <start> <end>)  ;; sum of values
+        (window-mean <field-designator> <start> <end>)  ;; mean of values
+        (window-mode <field-designator> <start> <end>)  ;; mode of values
+        (window-median <field-designator> <start> <end>)  ;; median of values
