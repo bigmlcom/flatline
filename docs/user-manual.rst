@@ -1295,6 +1295,7 @@ One can ``reverse`` and ``sort`` (in ascending lexicographical order)
 any list:
 
 ::
+
        (reverse <list>)
        (sort <list>)
 
