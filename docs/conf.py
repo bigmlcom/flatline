@@ -57,7 +57,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'Flatline'
-copyright = '2017, The BigML Team'
+copyright = '2017-2018, The BigML Team'
 author = 'The BigML Team'
 
 # The version info for the project you're documenting, acts as replacement for
