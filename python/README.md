@@ -37,10 +37,10 @@ $ python setup.py develop
 
 We provide a [sample notebook](./notebooks/Flatline.ipynb) to
 illustrate the workings of this library.  To use them, install
-[ipython](http://ipython.org) with `pip`:
+[ipython and jupyter](http://ipython.org) with `pip`:
 
 ```
-$ pip install ipython
+$ pip install jupyter
 ```
 
 then
@@ -56,5 +56,5 @@ directory:
 
 ```
 $ cd notebooks
-$ ipython notebook Flatline.ipynb
+$ jupyter notebook Flatline.ipynb
 ```
