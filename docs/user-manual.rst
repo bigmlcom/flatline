@@ -1253,7 +1253,7 @@ so that:
         (head (cons x lst)) ==> x
         (tail (cons x lst)) ==> lst
 
-It's also possible to access the nth element of a list using its 0-based
+It is also possible to access the nth element of a list using its 0-based
 position index:
 
 ::
@@ -1263,6 +1263,35 @@ position index:
 
 When the given position is out of bounds, the expression evaluates to
 nil (a missing token).
+
+There are operators to take and drop the first n elements of a list:
+
+::
+
+         (drop <list> <n>)
+         (take <list> <n>)
+         <n> := positive integer
+
+For example:
+
+.. code:: lisp
+
+       (take 3 (list 1 2 "3" 4)) ;; => (1 2 "3")
+       (drop 3 (list 1 2 "3" 4)) ;; => (4)
+
+Taking more elements than a list contains returns the full list, and
+droping more elements that the list length evaluates to a missing
+value.
+
+It is also possible to take a slice in a list in a semi-open range
+``[from, to)`` with the function ``slice``, that can be defined in
+terms of ``take`` and ``drop``:
+
+::
+
+        (slice <lst> <from> <to>)
+        := (take (- <to> <from>) (drop <from> <lst>))
+
 
 List operators
 ~~~~~~~~~~~~~~

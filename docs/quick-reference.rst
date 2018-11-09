@@ -283,7 +283,10 @@ Creation and elememt access:
         (cons <head> <tail>) ;;  list
         (head <list>) ;;  first element
         (tail <list>) ;;  list sans first element
-        (nth <list> <n>) ;;   0-based nth element
+        (nth <list> <n>)  ;;  0-based nth element
+        (take <list> <n>) ;;  take first <n> elements
+        (drop <list> <n>) ;;  drop first <n> elements
+        (drop <list> <from> <to>)  ;; elements in range [from to)
 
 Inclusion:
 
