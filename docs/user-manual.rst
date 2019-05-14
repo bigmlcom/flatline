@@ -915,6 +915,90 @@ will compute a boolean that tells you whether the field "000000" passes
 a Chi-square test for two degrees of freedom with significance level
 0.05.
 
+
+Fuzzy logic
+-----------
+
+Flatline provides some functions to work with Fuzzy logic datasets.
+Fuzzy logic is a form of many-valued logic in which the truth values
+of variables may be any real number between 0 and 1 inclusive. This
+kind of functions are called **t-norms** and **t-conorms**.
+
+Fields used as operands must contain real values between 0 and 1. As
+they are logical values it doesn't make sense having values outside
+this range. In this case,an error  will be raised.
+
+
+You can find more information about t-norms and t-conorms in the
+following links:
+
+- `Wikipedia: t-norms and t-conorms <https://en.wikipedia.org/wiki/T-norm>`__
+- `Wikipedia: Construction of t-norms <https://en.wikipedia.org/wiki/Construction_of_t-norms>`__
+
+All the norms need, at least, two arguments. The 2 fields where
+t-norms will be applied to. You can specify them with an string
+representing their field id or its field name. However, you can also
+use this norms with two real numbers as arguments, and the norms will
+be applied to these numbers:
+
+::
+
+        (tnorm-min "mycolumnname1" "mycolumnname2")
+        (tnorm-min "000002" "000001")
+        (tnorm-min 0.70 0.24)
+
+
+Basic T-norms
+~~~~~~~~~~~~~
+
+We provide the following basic t-norms.  All of them need 2
+parameters.
+
+::
+
+        (tnorm-min <f1> <f2>) ;; Minimum t-norm. Also called the Gödel t-norm.
+        (tnorm-product <f1> <f2>) ;; Product t-norm. The ordinary product of real numbers.
+        (tnorm-lukasiewicz <f1> <f2>) ;; Łukasiewicz t-norm.
+        (tnorm-drastic <f1> <f2>) ;; Drastic t-norm
+        (tnorm-nilpotent-min <f1> <f2>) ;; Nilpotent minimum t-norm
+
+
+
+Basic T-conorms
+~~~~~~~~~~~~~~~
+
+We provide the following basic t-conorms.  All of them need 2
+parameters.
+
+::
+
+        (tconorm-max <f1> <f2>) ;; Maximum t-norm. Dual to the minimum t-norm, is the smallest t-conorm.
+         (tconorm-probabilistic <f1> <f2>) ;; Probabilistic t-norm. It's dual to the product t-norm.
+         (tconorm-bounded <f1> <f2>) ;; Bounded t-norm. It'ss dual to the Łukasiewicz t-norm.
+         (tconorm-drastic <f1> <f2>) ;; Drastic t-conorm. It's dual to the drastic t-norm.
+         (tconorm-nilpotent-max <f1> <f2>) ;; Nilpotent maximum t-conorm. It's dual to the nilpotent minumum.
+         (tconorm-einstein-sum <f1> <f2>) ;; Einstein t-conorm. It's a dual to one of the Hamacher t-norms.
+
+
+Parametric T-norms
+~~~~~~~~~~~~~~~~~~
+
+We provide the following parametrized t-norms.  All of them need 3
+parameters, the two fields were t-norms will be applied, and the
+parameter ``p`` that changes their behavior.. This parameter must be a
+real number.
+
+::
+
+        (tnorm-schweizer-sklar <f1> <f2>) ;;  Parameter p in the range [-∞, ∞]
+        (tnorm-hamacher <f1> <f2>) ;; Parameter p in the range [0, ∞]
+        (tnorm-frank <f1> <f2>) ;; Parameter p in the range [0, ∞]
+        (tnorm-yager <f1> <f2>) ;; Parameter p in the range [0, ∞]
+        (tnorm-aczel-alsina <f1> <f2>) ;; Parameter p in the range [0, ∞]
+        (tnorm-dombi <f1> <f2>) ;; Parameter p in the range [0, ∞]
+        (tnorm-sugeno-weber <f1> <f2>) ;; Parameter p in the range [-1, ∞]
+
+
 Dates and times
 ---------------
 
