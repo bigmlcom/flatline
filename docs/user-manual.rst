@@ -924,11 +924,6 @@ Fuzzy logic is a form of many-valued logic in which the truth values
 of variables may be any real number between 0 and 1 inclusive. This
 kind of functions are called **t-norms** and **t-conorms**.
 
-Fields used as operands must contain real values between 0 and 1. As
-they are logical values it doesn't make sense having values outside
-this range. In this case,an error  will be raised.
-
-
 You can find more information about t-norms and t-conorms in the
 following links:
 
@@ -946,6 +941,29 @@ be applied to these numbers:
         (tnorm-min "mycolumnname1" "mycolumnname2")
         (tnorm-min "000002" "000001")
         (tnorm-min 0.70 0.24)
+
+
+Fields used as operands must contain real values between 0 and 1. As
+they are logical values it doesn't make sense having values outside
+this range. If you pass a field to the norms with more than 80% of
+its values outside this range, an exception will be raised.
+When some sparse out-of-range values are found during calculations,
+the generated field will contain a missing value for this specific
+row.
+
+Consider normalizing or truncating your fields, before passing
+them to the fuzzy logic norms:
+
+.. code:: lisp
+
+       (max 0 (min 1 (field "000001"))) ;; Truncating field
+       (normalize "000001") ;; Normalizing field
+
+You could do something like this:
+
+.. code:: lisp
+
+       (tnorm-min (normalize "000001")  (normalize "000002"))
 
 
 Basic T-norms
