@@ -919,10 +919,19 @@ a Chi-square test for two degrees of freedom with significance level
 Fuzzy logic
 -----------
 
-Flatline provides some functions to work with Fuzzy logic datasets.
-Fuzzy logic is a form of many-valued logic in which the truth values
-of variables may be any real number between 0 and 1 inclusive. This
-kind of functions are called **t-norms** and **t-conorms**.
+Flatline provides some functions to work with fuzzy logic features,
+fields or values.  Fuzzy logic is a form of many-valued logic in which
+the truth values of variables may be any real number between 0 and 1
+inclusive. It is employed to handle the concept of partial truth,
+where the truth value may range between completely true and completely
+false.
+
+Check this link to know more about fuzy logic:
+- `Wikipedia: Fuzzy logic <https://en.wikipedia.org/wiki/Fuzzy_logic>`__
+
+Triangular norms (t-norms) and conorms (t-cnorms are operations which
+generalize the logical conjunction and logical disjunction to fuzzy
+logic.
 
 You can find more information about t-norms and t-conorms in the
 following links:
@@ -930,47 +939,55 @@ following links:
 - `Wikipedia: t-norms and t-conorms <https://en.wikipedia.org/wiki/T-norm>`__
 - `Wikipedia: Construction of t-norms <https://en.wikipedia.org/wiki/Construction_of_t-norms>`__
 
-All the norms need, at least, two arguments. The 2 fields where
-t-norms will be applied to. You can specify them with an string
-representing their field id or its field name. However, you can also
-use this norms with two real numbers as arguments, and the norms will
-be applied to these numbers:
+All the norms are computed from two numeric values that can be
+specified either by referencing a numeric input field (giving its name
+or id) or by any valid flatline numeric expression. For instance:
 
 ::
 
-        (tnorm-min "mycolumnname1" "mycolumnname2")
+        (tnorm-min "field21" "field4")
         (tnorm-min "000002" "000001")
         (tnorm-min 0.70 0.24)
+        (tnorm-min "000002" 0.1)
+        (tnorm-min 0.2 (field 1))
 
 
-Fields used as operands must contain real values between 0 and 1. As
-they are logical values it doesn't make sense having values outside
-this range. If you pass a field to the norms with more than 80% of
-its values outside this range, an exception will be raised.
-When some sparse out-of-range values are found during calculations,
-the generated field will contain a missing value for this specific
-row.
 
-Consider normalizing or truncating your fields, before passing
-them to the fuzzy logic norms:
+
+Numeric values used by these norms must be between 0 and 1. As they
+are fuzzy logic values it doesn't make sense having values outside
+this range. If you pass a field to the norms with more than 80% of its
+values outside this range, an exception will be raised.  When some
+sparse out-of-range values are found during calculations, the
+generated field will contain a missing value for this specific row.
+
+If your input fields are out of range, consider normalizing or
+truncating your fields, before passing them to the fuzzy logic norms:
 
 .. code:: lisp
 
        (max 0 (min 1 (field "000001"))) ;; Truncating field
        (normalize "000001") ;; Normalizing field
 
-You could do something like this:
+You could then write expressions like these:
 
 .. code:: lisp
 
        (tnorm-min (normalize "000001")  (normalize "000002"))
+       (tnorm-min (max 0 (min 1 (field "000001")))
+                  (max 0 (min 1 (field "000002"))))
 
 
 Basic T-norms
 ~~~~~~~~~~~~~
 
-We provide the following basic t-norms.  All of them need 2
-parameters.
+As members of the family of fuzzy logics, t-norm fuzzy logics
+primarily aim at generalizing classical two-valued logic by admitting
+intermediary truth values between 1 (truth) and 0 (falsity)
+representing degrees of truth of propositions. In fuzzy logic,
+continuous t-norms are often found playing the role of conjunctive
+connectives. We provide the following basic t-norms.  All of them need
+2 parameters.
 
 ::
 
@@ -985,12 +1002,15 @@ parameters.
 Basic T-conorms
 ~~~~~~~~~~~~~~~
 
-We provide the following basic t-conorms.  All of them need 2
-parameters.
+T-conorms (also called S-norms) are dual to t-norms under the
+order-reversing operation which assigns 1 – x to x on [0,
+1]. T-conorms are used to represent logical disjunction in fuzzy logic
+and union in fuzzy set theory.  We provide the following basic
+t-conorms.  All of them need 2 parameters.
 
 ::
 
-        (tconorm-max <f1> <f2>) ;; Maximum t-norm. Dual to the minimum t-norm, is the smallest t-conorm.
+         (tconorm-max <f1> <f2>) ;; Maximum t-norm. Dual to the minimum t-norm, is the smallest t-conorm.
          (tconorm-probabilistic <f1> <f2>) ;; Probabilistic t-norm. It's dual to the product t-norm.
          (tconorm-bounded <f1> <f2>) ;; Bounded t-norm. It'ss dual to the Łukasiewicz t-norm.
          (tconorm-drastic <f1> <f2>) ;; Drastic t-conorm. It's dual to the drastic t-norm.
@@ -1001,10 +1021,11 @@ parameters.
 Parametric T-norms
 ~~~~~~~~~~~~~~~~~~
 
-We provide the following parametrized t-norms.  All of them need 3
+We provide the following parametrized t-norms. All of them need 3
 parameters, the two fields were t-norms will be applied, and the
-parameter ``p`` that changes their behavior.. This parameter must be a
-real number.
+parameter ``p`` that provides a way to vary the gain on the function
+so that it can be very restrictive or very permissive. This parameter
+must be a real number.
 
 ::
 

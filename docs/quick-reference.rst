@@ -199,6 +199,42 @@ Mathematical functions:
         (linear-regression <x1> <y1> ... <xn> <yn>) ;; slope, intercept, pearson
         (chi-square-p-value <degrees of freedom> <value>)
 
+
+Fuzzy logic
+-----------
+
+Basic t-norms
+
+.. code:: lisp
+
+        (tnorm-min <f1> <f2>) ;; Minimum t-norm. Also called the Gödel t-norm.
+        (tnorm-product <f1> <f2>) ;; Product t-norm. The ordinary product of real numbers.
+        (tnorm-lukasiewicz <f1> <f2>) ;; Łukasiewicz t-norm.
+        (tnorm-drastic <f1> <f2>) ;; Drastic t-norm
+        (tnorm-nilpotent-min <f1> <f2>) ;; Nilpotent minimum t-norm
+
+T-conorms:
+
+.. code:: lisp
+
+        (tconorm-max <f1> <f2>) ;; Maximum t-norm. Dual to the minimum t-norm, is the smallest t-conorm.
+        (tconorm-probabilistic <f1> <f2>) ;; Probabilistic t-norm. It's dual to the product t-norm.
+        (tconorm-bounded <f1> <f2>) ;; Bounded t-norm. It'ss dual to the Łukasiewicz t-norm.
+        (tconorm-drastic <f1> <f2>) ;; Drastic t-conorm. It's dual to the drastic t-norm.
+        (tconorm-nilpotent-max <f1> <f2>) ;; Nilpotent maximum t-conorm. It's dual to the nilpotent minumum.
+        (tconorm-einstein-sum <f1> <f2>) ;; Einstein t-conorm. It's a dual to one of the Hamacher t-norms.
+
+Parametric t-conorms:
+
+.. code:: lisp
+
+        (tconorm-max <f1> <f2>) ;; Maximum t-norm. Dual to the minimum t-norm, is the smallest t-conorm.
+        (tconorm-probabilistic <f1> <f2>) ;; Probabilistic t-norm. It's dual to the product t-norm.
+        (tconorm-bounded <f1> <f2>) ;; Bounded t-norm. It'ss dual to the Łukasiewicz t-norm.
+        (tconorm-drastic <f1> <f2>) ;; Drastic t-conorm. It's dual to the drastic t-norm.
+        (tconorm-nilpotent-max <f1> <f2>) ;; Nilpotent maximum t-conorm. It's dual to the nilpotent minumum.
+        (tconorm-einstein-sum <f1> <f2>) ;; Einstein t-conorm. It's a dual to one of the Hamacher t-norms.
+
 Coercions
 ---------
 
