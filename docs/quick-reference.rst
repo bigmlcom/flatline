@@ -8,8 +8,8 @@ Access to input field values:
 
 .. code:: lisp
 
-         (field <field-designator> [<shift>])
-         (f <field-designator> [<shift>])
+         (field <field-designator> [<shift>] [<default-value>])
+         (f <field-designator> [<shift>] [<default-value>])
          (fields <field-designator> ... <field-designator-n>)
          (random-field-value <field-designator>)
          (weighted-random-field-value <field-designator>)
@@ -130,6 +130,7 @@ Utilities:
 .. code:: lisp
 
         (length <string>) ;;  integer
+        (join <list of string> <sep-string>) ;; string
         (levenshtein <str-sexp0> <str-sexp1>)  ;;  number
         (occurrences <string> <term> [<case-insensitive?> <lang>]) ;;  number
         (language <string>) ;;  ["en", "es", "ca", "nl"]
@@ -167,6 +168,9 @@ Mathematical functions:
 
 .. code:: lisp
 
+        (zero? <x>)
+        (even? <x>)
+        (odd? <x>)
         (abs <x>)     ;; Absolute value
         (acos <x>)
         (asin <x>)
@@ -355,10 +359,23 @@ Field lists and windows:
 .. code:: lisp
 
         (fields <field-designator> ... <field-designator-n>)
-        (window <field-designator> <start> <end>)
+        (window <field-designator> <start> <end> [<padding-value>])
         (diff-window <fdes> <start> <end>) ;; differences of consecutive values
         (cond-window <fdes> <sexp>)        ;; values that satisfy boolean sexp
-        (window-sum <field-designator> <start> <end>)  ;; sum of values
-        (window-mean <field-designator> <start> <end>)  ;; mean of values
-        (window-mode <field-designator> <start> <end>)  ;; mode of values
-        (window-median <field-designator> <start> <end>)  ;; median of values
+        ;; sum of values
+        (window-sum <field-designator> <start> <end> [<padding-value>])
+        ;; mean of values
+        (window-mean <field-designator> <start> <end> [<padding-value>])
+        ;; mode of values
+        (window-mode <field-designator> <start> <end> [<padding-value>])
+        ;; median of values
+        (window-median <field-designator> <start> <end> [<padding-value>])
+
+
+Accumulating values in cells
+----------------------------
+
+.. code:: lisp
+
+        (cell <cell-name> <default-value>)
+        (set-cell <cell-name> <value>)

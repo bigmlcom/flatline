@@ -57,14 +57,19 @@ Input field values are accessed using the ``field`` operator:
 
 ::
 
-         (field <field-designator> [<shift>])
+         (field <field-designator> [<shift>] [<default-value>])
          <field-designator> := field id | field name | column_number
          <shift> := integer expression
+         <default-value> := output value if the requested row is out-of-range
 
 where ``<field-designator>`` can be either the identifier, name or
 column number of the desired field, and the optional ``<shift>`` (an
-integer, defaulting to 0) denotes the offset with respect to the current
-input row.
+integer, defaulting to 0) denotes the offset with respect to the
+current input row. The optional ``<default-value>`` is the output
+value if the value of the field for the given row (taking into account
+the shift, if any) is outside the limits of our dataset. It can be a
+constant value or an expression. If ``<default-value>`` is not set,
+the accessor will return a missing in those cases.
 
 So, for instance, these sexps denote field values extracted from the
 current row:
@@ -73,6 +78,9 @@ current row:
 
           (field 0)
           (field 0 0)
+          (field 0 -1 "default-string")
+          (field 0 -1 (mean (field 0)))
+          (field 0 -1 3)
           (field "000004")
           (field "a field name" 0)
 
@@ -98,11 +106,12 @@ often user operator, it can be abbreviated to ``f``:
 
           (f "000001" -2)
           (f 3 1)
+          (f 1 -1 3)
           (f "a field" 23)
 
 We also provide a predicate, ``missing?``, that will tell you whether
-the value of the field for the given row (taking into account the shift,
-if any) is a missing token:
+the value of the field for the given row (taking into account the
+shift, if any) is a missing token:
 
 ::
 
@@ -560,6 +569,24 @@ e.g.
 
 Note that the length of a missing value is a missing value, not zero.
 
+The primitive ``join`` allows joining a list of string values using a
+given separator, optionally skipping any missing values in the list:
+
+::
+
+   (join <list of string> [<sep-string>] [<skip-missings?>])
+
+For instance:
+
+.. code:: lisp
+
+        (join (list "a" "b" "zz")) => "abzz"
+        (join (list "a" "b") "|") => "a|b"
+        (join (list "a" "b" "c") "x") => "axbxc"
+        (join (list "a" (f 1) "b") ",") => MISSING (if (missing? 1))
+        (join (list "a" (f 1) "b") "," true) => "a,b" (if (missing? 1))
+        (join (list "a" (f 1) "b") true) => "ab" (if (missing? 1))
+
 The primitive ``levenshtein`` computes, as an integer, the distance
 between two given string values:
 
@@ -770,7 +797,14 @@ Comparing numerical values can be tricky, especially when they're the
 result of mathematical operations, but Flatline makes an effort to be
 sensible and considers things like 1 and 1.0 equal (for numeric values,
 it actually uses Clojure's ``==`` operator); but of course it cannot fix
-rounding errors or the like for you!
+rounding errors or the like for you!  For convenience, and to help
+readability in some contexts, we provide the trivial predicate
+``zero?``, which simply expands to a comparison with 0:
+
+::
+
+   (zero? <x>) := (= 0 <x>)
+
 
 Logical operators
 -----------------
@@ -826,6 +860,9 @@ Mathematical functions
 We provide a host of mathematical functions:
 
 ::
+
+        (odd? <x>)
+        (even? <x>)
 
         (max <x0> ... <xn>)
         (min <x0> ... <xn>)
@@ -1621,12 +1658,12 @@ over the shifted field accessors we've already seen:
 
 ::
 
-       (window <field-designator> <start> <end>)
+       (window <field-designator> <start> <end> [<padding-value>])
 
-        := (list (f <field-designator> <start>)
-                 (f <field-designator> <start + 1>)
+        := (list (f <field-designator> <start> <padding-value>)
+                 (f <field-designator> <start + 1> <padding-value>)
                  ...
-                 (f <field-designator> <end>))
+                 (f <field-designator> <end> <padding-value>))
 
 So, for instance, the window:
 
@@ -1640,8 +1677,20 @@ denotes the list of values:
 
         (list (f "000001" -1) (f "000001" 0) (f "000001" 1) (f "000001" 2))
 
+
 As shown, both start and end must be integers, and the values
 corresponding to their shifts are included in the resulting list.
+
+In the same way that the shifted field accessors accept a
+``default-value`` to handle with the out-of-range rows, you can use the
+``padding-value`` to indicate the value that will be used in those
+cases for windows. ``padding-value`` can be also an expression:
+
+.. code:: lisp
+
+       (window "Temp" -2 0 (+ 273 (* 40 (rand))))
+
+
 
 It's possible to apply arithmetic operators, ``filter`` and ``map`` to
 any window. For instance, you could compute the average of the last 3
@@ -1665,23 +1714,26 @@ sequence of their differences:
 
 ::
 
-       (window-median <field-designator> <start> <end>)
-         := (list-median (window <field-designator> <start> <end>))
+       (window-median <field-designator> <start> <end> [<padding-value>])
+         := (list-median (window <field-designator> <start> <end> <padding-value>))
 
-       (window-mean <field-designator> <start> <end>)
-         := (avg (window <field-designator> <start> <end>))
+       (window-mean <field-designator> <start> <end> [<padding-value>])
+         := (avg (window <field-designator> <start> <end> <padding-value>))
 
-       (window-mode <field-designator> <start> <end>)
-         := (mode (window <field-designator> <start> <end>))
+       (window-mode <field-designator> <start> <end> [<padding-value>])
+         := (mode (window <field-designator> <start> <end> <padding-value>))
 
-       (window-sum <field-designator> <start> <end>)
-         := (+ (window <field-designator> <start> <end>))
+       (window-sum <field-designator> <start> <end> [<padding-value>])
+         := (+ (window <field-designator> <start> <end> <padding-value>))
 
-       (diff-window <fdes> <start> <end>)
-         := (list (- (f <fdes> <start>) (f <fdes> (- <start> 1)))
-                  (- (f <fdes> (- <start> 1)) (f <fdes> (- <start> 2)))
+       (diff-window <fdes> <start> <end> [<padding-value>])
+         := (list (- (f <fdes> <start> <padding-value>)
+                     (f <fdes> (- <start> 1) <padding-value>))
+                  (- (f <fdes> (- <start> 1) <padding-value>)
+                     (f <fdes> (- <start> 2) <padding-value>))
                   ...
-                  (- (f <fdes> (- <end> 1)) (f <fdes> <end>)))
+                  (- (f <fdes> (- <end> 1) <padding-value>)
+                     (f <fdes> <end> <padding-value>)))
 
 These window generator forms can also be combined with ``filter``,
 ``map`` and all the other window operators.
@@ -1712,3 +1764,45 @@ returned.
 
 Note that, as mentioned, ``<sexp>`` is a Flatline expression computed
 with the corresponding (future) full row as input.
+
+Acummulating values in cells
+----------------------------
+
+It is possible to store and retrieve values global to the full
+generation using named *cells*.  To retrieve a value previously stored
+in a cell (most probably, when computing the field values of a
+previous row), you just call ``cell``, providing the cell name as a
+string-valued expression (it doesn't have to be constant) and a
+default value in case the cell hasn't been set yet (this also tells
+flatline what the type of the cell's values are going to be).  To
+store a value in a cell, you simply call ``set-cell``, with a name and
+a value.  ``set-cell`` returns the value just set.
+
+For instance, this flatline expression will generate a new field
+containing the running sum of values in the input field "price":
+
+.. code:: lisp
+
+      (let (s (cell "sum" 0))
+        (set-cell "sum" (+ (f "price") s)))
+
+Of course, ``set-cell`` doesn't need to be the final call in your
+expression.  Here's an example of a more complicated, if a bit
+contrieved, usage case for a string cell:
+
+.. code:: lisp
+
+       (let (s (cell "ff" "flip")
+             ns (set-cell "ff" (if (= s "flip") "flop" "flip")))
+         (if (= s "flip")
+           (- (f "A") (f "B"))
+           (- (f "B") (f "A"))))
+
+As mentioned, cell names can be computed values:
+
+.. code:: lisp
+
+      (let (cat (f "cat-field")
+            cat-count (cell cat 0)
+            new-count (set-cell cat (+ 1 cat-count)))
+         (if (> cat-count 1000) (something) (something-else)))
