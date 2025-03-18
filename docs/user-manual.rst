@@ -257,6 +257,21 @@ E.g.:
 
 As with ``normalize``, the field used must have a numeric optype.
 
+You can use the function ``log-normal`` to apply ``z-score`` to the
+logarithm of your field. This is useful when your field follows a
+log-normal distribution and you want to map it to a gaussian.
+
+
+.. code:: lisp
+
+        (log-normal "000003")
+        (z-score "a numeric field")
+        (z-score 1)
+
+
+This function requires numeric fields with, at least, 80% of the
+values greater than 0 and a non-zero mean value.
+
 Vectorized categorical or text fields
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -451,6 +466,125 @@ exclusive:
 
        (equals-to-items? <field-designator> <item_0> ... <item_n>)
        ;; with <item_i> of type string for i in [0, n]
+
+
+Regions
+^^^^^^^
+
+It is possible to manipulate and modify values of type *regions*.  In
+flatline, a regions value is a list of lists.  Each of the inner lists
+has 5 elements.  The first one is the label of the region (a string),
+and its followed by four integers, which are the coordinates of the
+top-left corner and bottom-right corner of the region at hand.   The
+``regions?`` primitive checks whether a list represents a valid
+region (checking also if the vertex coordinates are consitent):
+
+.. code:: lisp
+
+       (region? (list "label" 10 10 20 30)) ;; => "true"
+       (region? (list 10 10 20 30)) ;; => "false"
+       (region? (list -10 10 -20 30)) ;; => "false"
+
+When we access a field of type regions, the returned value will be a
+list with all its values satisfying the ``region?`` predictate.  We
+can add a new region to it with ``add-region``:
+
+::
+
+   (add-region <field-designator> <region-value>)
+   (add-region <field-designator> <label> <x0> <y0> <x1> <y1>)
+   ;; with <region-value> and (list <label> <x0> <y0> <x1> <y1>) a region
+   (add-region <regions-value> <region-value>)
+   (add-region <regions-value> <label> <x0> <y0> <x1> <y1>)
+   ;; with <regions-value> a list of region values
+
+For instance, if "field-r" is the name of a regions fields, we can
+create a new regions value with the two equivalent forms:
+
+.. code:: lisp
+
+          (add-region "field-r" "region0" 10 10 123 200)
+
+          (let (region (list "region0" 10 10 123 200))
+            (add-region "field-r" region))
+
+Or we can manipulate directly regions values:
+
+.. code:: lisp
+
+       (let (r (list (list "a" 0 0 10 10)))
+         (add-region r (field "field-r")))
+
+The above example will add to all values of the regions field
+"field-r" the new region ``["a" 0 0 10 10]``.
+
+We can also remove all regions of a given *label*:
+
+::
+
+   (remove-region <field-designator> <label>)
+   (remove-region <regions-value> <label>)
+
+E.g.
+
+.. code:: lisp
+
+          (remove-region "field-r" "label")
+          (remove-region (list (list "a" 1 2 3 4)
+                               (list "b" 1 1 20 20)
+                               (list "a" 0 0 1 2))
+                         "a")  ;; => (list (list "b" 1 1 20 20))
+
+As mentioned, ``remove-region`` will remove all entries that have
+"label" as their label (first element).
+
+We can combine the action of ``remove-region`` and ``add-region`` with
+``update-region``:
+
+::
+
+   (update-region <field-designator> <region-value>)
+   (update-region <field-designator> <label> <x0> <y0> <x1> <y1>)
+   ;; with <region-value> and (list <label> <x0> <y0> <x1> <y1>) a region
+   (update-region <regions-value> <region-value>)
+   (update-region <regions-value> <label> <x0> <y0> <x1> <y1>)
+   ;; with <regions-value> a list of region values
+
+This primitive will first remove all entries with the same label as
+the given region, and then add it to the regions value.
+
+It is also possible to rename all occurences of a given label by a new
+one:
+
+::
+
+   (rename-region <field-designator> <old-label-string> <new-label-string>)
+   (rename-region <regions-value> <old-label-string> <new-label-string>)
+
+E.g.:
+
+.. code:: lisp
+
+    (rename-region "100002" "red" "crimson")
+    (rename-region (list (list "a" 1 1 20 10)
+                         (list "c" 10 10 20 20)
+                         (list "a" 11 11 20 21))
+                   "a" "x")
+          ;; => (list (list "x" 1 1 20 10)
+          ;;          (list "c" 10 10 20 20)
+          ;;          (list "x" 11 11 20 21))
+
+Finally, we can obtain a list of the labels used by a regions field
+with
+
+::
+
+   (region-labels <field-designator>) ;; => list of strings
+
+As usual, in all the primitives described above,
+``<field-designator>`` can be a name, identifier or column number,
+always pointing to a field of type *regions*.
+
 
 Field population, percentiles &co for numeric fields
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -897,6 +1031,12 @@ We provide a host of mathematical functions:
         (cosh <x>)
         (sinh <x>)
         (tanh <x>)
+
+        (spherical-distance <lat1> <lon1> <lat2> <lon2>)
+        ;; <lat1>, <lon1>, <lat2>, <lon2> latiude/longitude in radians
+
+        (spherical-distance-deg <lat1> <lon1> <lat2> <lon2>)
+        ;; <lat1>, <lon1>, <lat2>, <lon2> latiude/longitude in degrees
 
 As well as two primitives for generating random numbers:
 

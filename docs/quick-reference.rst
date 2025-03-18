@@ -60,6 +60,7 @@ Normalization:
 
          (normalize <id> [<from> <to>]) ;; [from to] defaults to [0, 1]
          (z-score <id>)
+         (log-normal <id>)
 
 Percentiles and population:
 
@@ -93,6 +94,19 @@ Items:
 
          (contains-items? <field-designator> <item0> ... <itemn>)
          (equal-to-items? <field-designator> <item0> ... <itemn>)
+
+Regions:
+
+.. code:: lisp
+
+          (region? <region list>)
+          (rename-region <regions list> <old-label> <new-label>)
+          (add-region <regions list> <region list>)
+          (add-region <regions list> <label-string> <int> <int> <int> <int>)
+          (remove-region <regions list> <label-string>)
+          (update-region <regions list> <region list>)
+          (update-region <regions list> <label-string> <int> <int> <int> <int>)
+          ;; <regions list> either a regions value or a regions field designator
 
 Clustering:
 
@@ -200,6 +214,8 @@ Mathematical functions:
         (tanh <x>)
         (to-degrees <x>) ;; <x> := radians
         (to-radians <x>) ;; <x> := degrees
+        (spherical-distance <lat1> <lon1> <lat2> <lon2>) ;; args in
+        (spherical-distance-deg <lat1> <lon1> <lat2> <lon2>) ;; args in radians
         (linear-regression <x1> <y1> ... <xn> <yn>) ;; slope, intercept, pearson
         (chi-square-p-value <degrees of freedom> <value>)
 
