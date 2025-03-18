@@ -57,7 +57,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'Flatline'
-copyright = '2017-2018, The BigML Team'
+copyright = '2017-2018, 2025, The BigML Team'
 author = 'The BigML Team'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -74,7 +74,7 @@ release = '1.0'
 #
 # This is also used if you do content translation via gettext catalogs.
 # Usually you set "language" from the command line for these cases.
-language = None
+language = "en"
 
 # There are two options for replacing |today|: either, you set today to some
 # non-false value, then it is used:
