@@ -146,7 +146,7 @@
           var v = document.getElementById(inputName).value;
           v = v.trim();
           var rows = v.split("\n").map(function(x){return x.split(",");});
-          var res = flatline.apply_form(form, rows);
+          var res = bigml.dixie.flatline.apply_form(form, rows);
           res = res.map(function (x) {return x.join(', ');});
           res = res.join('<br/>');
           out.innerHTML = '<div class="result">' + res + '</div>';
@@ -168,7 +168,7 @@
             if (str == '') {
               result.innerHTML = '<div class="error">No expression!</div>';
             } else {
-              var pr = parseEvalResult(flatline.evaluate_js(str, dataset));
+              var pr = parseEvalResult(bigml.dixie.flatline.evaluate_js(str, dataset));
               result.innerHTML = pr[0];
               evaluatedJSON = pr[1];
             }
@@ -186,7 +186,7 @@
           if (str == '') {
            result.innerHTML = '<div class="error">No expression!</div>';
           } else {
-            var pr = parseEvalResult(flatline.evaluate_sexp(str, dataset));
+            var pr = parseEvalResult(bigml.dixie.flatline.evaluate_sexp(str, dataset));
             result.innerHTML = pr[0];
             evaluatedLisp = pr[1];
           }
@@ -196,7 +196,7 @@
         toJSONButton.addEventListener('click', function() {
           try {
             var lstr = document.getElementById('lispInput').value;
-            var json = JSON.stringify(flatline.sexp_to_js(lstr));
+            var json = JSON.stringify(bigml.dixie.flatline.sexp_to_js(lstr));
             document.getElementById('jsonInput').value = json;
             clearMsg('jsonResult')
             clearMsg('jsonApplyOutput')
@@ -220,7 +220,7 @@
         toLispButton.addEventListener('click', function() {
           try {
             var jsv = document.getElementById('jsonInput').value;
-            var lisp = flatline.js_to_sexp(JSON.parse(jsv));
+            var lisp = bigml.dixie.flatline.js_to_sexp(JSON.parse(jsv));
             document.getElementById('lispInput').value = lisp;
             clearMsg('lispResult')
             clearMsg('lispApplyOutput')
